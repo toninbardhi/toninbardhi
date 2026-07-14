@@ -198,9 +198,41 @@ INSERT INTO `categories` (`id`,`parent_id`,`name`,`slug`,`path`,`description`,`s
   (78, 15, 'Umorismo', 'umorismo', 'tempo-libero/umorismo', NULL, 4),
   (79, 15, 'Outdoor',  'outdoor',  'tempo-libero/outdoor',  NULL, 5);
 
+-- ------------------------------------------------------------
+--  Categorie moderne aggiuntive: Intelligenza Artificiale e Criptovalute
+--  (non presenti nell'albero storico DMOZ/Curlie).
+-- ------------------------------------------------------------
+INSERT INTO `categories` (`id`,`parent_id`,`name`,`slug`,`path`,`description`,`sort_order`) VALUES
+  -- Intelligenza artificiale (sotto Computer = 3)
+  (80, 3,  'Intelligenza artificiale', 'intelligenza-artificiale', 'computer/intelligenza-artificiale', 'IA, machine learning e sistemi intelligenti.', 6),
+  (81, 80, 'Machine learning',            'machine-learning',            'computer/intelligenza-artificiale/machine-learning',            NULL, 1),
+  (82, 80, 'IA generativa',               'ia-generativa',               'computer/intelligenza-artificiale/ia-generativa',               NULL, 2),
+  (83, 80, 'Elaborazione del linguaggio', 'nlp',                         'computer/intelligenza-artificiale/nlp',                         NULL, 3),
+  (84, 80, 'Visione artificiale',         'visione-artificiale',         'computer/intelligenza-artificiale/visione-artificiale',         NULL, 4),
+  (85, 80, 'Robotica',                    'robotica',                    'computer/intelligenza-artificiale/robotica',                    NULL, 5),
+  (86, 80, 'Chatbot e assistenti',        'chatbot-e-assistenti',        'computer/intelligenza-artificiale/chatbot-e-assistenti',        NULL, 6),
+  (87, 80, 'Etica e sicurezza IA',        'etica-e-sicurezza-ia',        'computer/intelligenza-artificiale/etica-e-sicurezza-ia',        NULL, 7),
+
+  -- Criptovalute (sotto Affari = 1)
+  (88, 1,  'Criptovalute',            'criptovalute',        'affari/criptovalute', 'Bitcoin, blockchain, DeFi e finanza digitale.', 5),
+  (89, 88, 'Bitcoin',                 'bitcoin',             'affari/criptovalute/bitcoin',              NULL, 1),
+  (90, 88, 'Ethereum',                'ethereum',            'affari/criptovalute/ethereum',             NULL, 2),
+  (91, 88, 'Blockchain',              'blockchain',          'affari/criptovalute/blockchain',           NULL, 3),
+  (92, 88, 'DeFi',                    'defi',                'affari/criptovalute/defi',                 NULL, 4),
+  (93, 88, 'NFT',                     'nft',                 'affari/criptovalute/nft',                  NULL, 5),
+  (94, 88, 'Exchange e wallet',       'exchange-e-wallet',   'affari/criptovalute/exchange-e-wallet',    NULL, 6),
+  (95, 88, 'Mining',                  'mining',              'affari/criptovalute/mining',               NULL, 7);
+
 -- Alcuni link di esempio (puoi eliminarli e inserire i tuoi).
 INSERT INTO `links` (`category_id`,`title`,`url`,`description`,`status`,`featured`,`featured_position`,`featured_until`) VALUES
   (28, 'Corso PHP Sponsor', 'https://esempio.it', 'Esempio di sito in evidenza (a pagamento).', 'approved', 1, 1, DATE_ADD(CURDATE(), INTERVAL 1 YEAR)),
   (28, 'PHP.net', 'https://www.php.net', 'Sito ufficiale del linguaggio PHP con documentazione completa.', 'approved', 0, 0, NULL),
   (28, 'MDN Web Docs', 'https://developer.mozilla.org', 'Documentazione per sviluppatori web di Mozilla.', 'approved', 0, 0, NULL),
-  (20, 'IMDb', 'https://www.imdb.com', 'Il più grande database di film e serie TV.', 'approved', 0, 0, NULL);
+  (20, 'IMDb', 'https://www.imdb.com', 'Il più grande database di film e serie TV.', 'approved', 0, 0, NULL),
+  -- Intelligenza artificiale
+  (82, 'Anthropic (Claude)', 'https://www.anthropic.com', 'Ricerca sull''IA e assistente Claude.', 'approved', 0, 0, NULL),
+  (82, 'OpenAI', 'https://openai.com', 'Laboratorio di ricerca sull''intelligenza artificiale.', 'approved', 0, 0, NULL),
+  (81, 'Hugging Face', 'https://huggingface.co', 'Piattaforma di modelli e dataset per il machine learning.', 'approved', 0, 0, NULL),
+  -- Criptovalute
+  (89, 'Bitcoin.org', 'https://bitcoin.org', 'Sito informativo ufficiale su Bitcoin.', 'approved', 0, 0, NULL),
+  (90, 'Ethereum.org', 'https://ethereum.org', 'Sito ufficiale della community Ethereum.', 'approved', 0, 0, NULL);
