@@ -8,6 +8,8 @@ $pageTitle = (isset($title) && $title !== null && $title !== '')
 $desc = $metaDescription ?? 'Directory web organizzata in categorie: sfoglia e scopri i migliori siti selezionati.';
 $reqPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
 $canonical = abs_url($reqPath);
+$ads = $CONFIG['adsense'] ?? [];
+$adsOn = !empty($ads['client']);
 ?><!DOCTYPE html>
 <html lang="it">
 <head>
@@ -24,6 +26,10 @@ $canonical = abs_url($reqPath);
   <meta property="og:url" content="<?= e($canonical) ?>">
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="<?= e(url('assets/css/style.css')) ?>">
+  <?php if ($adsOn): ?>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?= e($ads['client']) ?>"
+            crossorigin="anonymous"></script>
+  <?php endif; ?>
 </head>
 <body>
   <header class="site-header">
@@ -49,6 +55,20 @@ $canonical = abs_url($reqPath);
       <?php endif; ?>
       <?= $content ?>
     </div>
+
+    <?php if ($adsOn): ?>
+      <div class="container">
+        <div class="ad-banner">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="<?= e($ads['client']) ?>"
+               <?php if (!empty($ads['slot'])): ?>data-ad-slot="<?= e($ads['slot']) ?>"<?php endif; ?>
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+      </div>
+    <?php endif; ?>
   </main>
 
   <footer class="site-footer">

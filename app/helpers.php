@@ -142,6 +142,58 @@ function take_flash(): array
 }
 
 /* ------------------------------------------------------------------ *
+ *  Antispam (form pubblici)
+ * ------------------------------------------------------------------ */
+
+/**
+ * Prepara una nuova sfida antispam e restituisce la domanda matematica
+ * da mostrare (es. "3 + 5"). Salva la risposta e l'ora in sessione.
+ */
+function antispam_challenge(): string
+{
+    $a = random_int(1, 9);
+    $b = random_int(1, 9);
+    $_SESSION['captcha_sum'] = $a + $b;
+    $_SESSION['form_time']   = time();
+    return "$a + $b";
+}
+
+/**
+ * Controlla i dati antispam del POST. Ritorna un array di errori.
+ * Un errore speciale '__spam__' indica un bot da ignorare silenziosamente.
+ *
+ * @param array $cfg configurazione 'antispam'
+ */
+function antispam_errors(array $cfg): array
+{
+    if (empty($cfg['enabled'])) {
+        return [];
+    }
+    $errors = [];
+
+    // 1) Honeypot: campo nascosto che gli umani non compilano.
+    if (trim((string) ($_POST['website'] ?? '')) !== '') {
+        return ['__spam__'];
+    }
+
+    // 2) Tempo minimo di compilazione.
+    $t = (int) ($_SESSION['form_time'] ?? 0);
+    $min = (int) ($cfg['min_secs'] ?? 3);
+    if ($t > 0 && (time() - $t) < $min) {
+        $errors[] = 'Invio troppo rapido: attendi un istante e riprova.';
+    }
+
+    // 3) Domanda matematica.
+    $answer = $_POST['captcha'] ?? '';
+    $expected = $_SESSION['captcha_sum'] ?? null;
+    if ($expected === null || !ctype_digit((string) $answer) || (int) $answer !== (int) $expected) {
+        $errors[] = 'Rispondi correttamente alla domanda di verifica.';
+    }
+
+    return $errors;
+}
+
+/* ------------------------------------------------------------------ *
  *  Rendering delle view
  * ------------------------------------------------------------------ */
 

@@ -105,20 +105,31 @@ class PublicController
         view('public/suggest', [
             'title'      => 'Suggerisci un sito',
             'categories' => Category::all(),
+            'captcha'    => antispam_challenge(),
             'old'        => [],
         ]);
     }
 
     public static function suggestSubmit(): void
     {
+        global $CONFIG;
         csrf_check();
+
+        // Antispam: honeypot, tempo minimo, domanda matematica.
+        $spam = antispam_errors($CONFIG['antispam'] ?? []);
+        if (in_array('__spam__', $spam, true)) {
+            // Bot rilevato dall'honeypot: fingiamo successo senza salvare nulla.
+            view('public/suggest_done', ['title' => 'Grazie!']);
+            return;
+        }
+
         $categoryId = (int) input('category_id');
         $title      = input('title');
         $url        = input('url');
         $description= input('description');
         $email      = input('email');
 
-        $errors = [];
+        $errors = $spam;
         if ($title === '')                          $errors[] = 'Il titolo è obbligatorio.';
         if (!filter_var($url, FILTER_VALIDATE_URL)) $errors[] = 'Inserisci un URL valido (inizia con http:// o https://).';
         if (!Category::find($categoryId))           $errors[] = 'Seleziona una categoria valida.';
@@ -131,6 +142,7 @@ class PublicController
                 'title'      => 'Suggerisci un sito',
                 'categories' => Category::all(),
                 'errors'     => $errors,
+                'captcha'    => antispam_challenge(), // nuova sfida
                 'old'        => compact('categoryId', 'title', 'url', 'description', 'email'),
             ]);
             return;

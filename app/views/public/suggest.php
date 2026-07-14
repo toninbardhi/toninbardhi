@@ -40,6 +40,21 @@ $old = $old ?? [];
       <input type="email" name="email" id="email" value="<?= e($old['email'] ?? '') ?>">
       <div class="hint">Non verrà pubblicata: serve solo agli editor per eventuali contatti.</div>
     </div>
+
+    <?php /* Honeypot: campo invisibile agli umani, i bot tendono a compilarlo. */ ?>
+    <div class="hp" aria-hidden="true">
+      <label for="website">Lascia vuoto questo campo</label>
+      <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <?php if (!empty($captcha)): ?>
+      <div class="field">
+        <label for="captcha">Verifica antispam: quanto fa <strong><?= e($captcha) ?></strong>?</label>
+        <input type="text" name="captcha" id="captcha" inputmode="numeric" required
+               autocomplete="off" style="max-width:140px">
+      </div>
+    <?php endif; ?>
+
     <div class="form-actions">
       <button class="btn" type="submit">Invia suggerimento</button>
       <a class="btn secondary" href="<?= e(url('/')) ?>">Annulla</a>

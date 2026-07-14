@@ -34,4 +34,17 @@ return [
 
     // Numero di link per pagina nelle categorie e nella ricerca
     'per_page' => 20,
+
+    // --- Google AdSense (banner in fondo alle pagine pubbliche) ---
+    // Lascia 'client' vuoto per non mostrare alcun banner.
+    'adsense' => [
+        'client' => '',            // es. 'ca-pub-1234567890123456'
+        'slot'   => '',            // es. '1234567890'
+    ],
+
+    // --- Antispam del form "Suggerisci un sito" ---
+    'antispam' => [
+        'enabled'  => true,        // honeypot + domanda matematica + controllo tempo
+        'min_secs' => 3,           // invio più rapido di così = probabile bot
+    ],
 ];

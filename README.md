@@ -15,6 +15,8 @@ su qualsiasi hosting condiviso (testato pensando a **Netsons**).
 - ⭐ **Posizionamento a pagamento**: metti un link "in evidenza" (badge
   *Sponsorizzato*) tra i primi 5 della categoria, con posizione e scadenza
   (precompilata a 1 anno); alla scadenza torna normale automaticamente
+- 🛡️ **Antispam** sul form pubblico: honeypot + domanda matematica + controllo tempo (nessun servizio esterno, niente reCAPTCHA)
+- 💰 **Banner Google AdSense** opzionale in fondo alle pagine pubbliche
 - 👥 **Utenti con ruoli**: `admin` (gestisce anche gli utenti) ed `editor`
 - 👤 **Profilo personale**: ogni utente cambia nome/email/password (con verifica della password attuale)
 - 🔐 Login sicuro, password con hash bcrypt, protezione CSRF, escaping output
@@ -77,6 +79,33 @@ giorni mancanti alla scadenza e permette di rimuovere l'evidenza con un clic.
 **Aggiorni da una versione precedente?** Esegui la migrazione
 [`database/migrations/2026_07_add_featured.sql`](database/migrations/2026_07_add_featured.sql)
 da phpMyAdmin per aggiungere le colonne necessarie.
+
+## Pubblicità (Google AdSense)
+
+Per mostrare un banner in fondo alle pagine pubbliche, in `app/config.php`
+imposta i dati del tuo account AdSense:
+
+```php
+'adsense' => [
+    'client' => 'ca-pub-1234567890123456', // il tuo ID publisher
+    'slot'   => '1234567890',              // ID dell'unità annuncio (facoltativo)
+],
+```
+
+Lasciando `client` vuoto non viene caricato nulla (nessuno script esterno).
+L'area riservata non mostra mai pubblicità.
+
+## Antispam
+
+Il form "Suggerisci un sito" è protetto **senza servizi esterni** (quindi
+niente reCAPTCHA e nessun problema di privacy/GDPR):
+
+- **honeypot**: un campo invisibile che i bot compilano → l'invio viene
+  scartato in silenzio;
+- **domanda matematica**: es. "quanto fa 3 + 5?";
+- **controllo tempo**: invii troppo rapidi vengono bloccati.
+
+Si configura in `app/config.php` → `antispam` (`enabled`, `min_secs`).
 
 ## Struttura del progetto
 

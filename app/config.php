@@ -19,4 +19,14 @@ return [
         'url'      => getenv('SITE_URL') ?: 'https://webdirectory.link',
     ],
     'per_page' => 20,
+
+    'adsense' => [
+        'client' => getenv('ADSENSE_CLIENT') ?: '',
+        'slot'   => getenv('ADSENSE_SLOT') ?: '',
+    ],
+
+    'antispam' => [
+        'enabled'  => true,
+        'min_secs' => 3,
+    ],
 ];
