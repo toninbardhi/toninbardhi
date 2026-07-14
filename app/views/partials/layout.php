@@ -45,15 +45,19 @@ $adsOn = !empty($ads['client']);
     </div>
   </header>
 
+  <?php $showSidebar = empty($hideSidebar); ?>
   <main>
-    <div class="container">
-      <?php if (!empty($flash['success'])): ?>
-        <div class="alert success"><?= e($flash['success']) ?></div>
-      <?php endif; ?>
-      <?php if (!empty($flash['error'])): ?>
-        <div class="alert error"><?= e($flash['error']) ?></div>
-      <?php endif; ?>
-      <?= $content ?>
+    <div class="container <?= $showSidebar ? 'layout-grid' : '' ?>">
+      <div class="content-col">
+        <?php if (!empty($flash['success'])): ?>
+          <div class="alert success"><?= e($flash['success']) ?></div>
+        <?php endif; ?>
+        <?php if (!empty($flash['error'])): ?>
+          <div class="alert error"><?= e($flash['error']) ?></div>
+        <?php endif; ?>
+        <?= $content ?>
+      </div>
+      <?php if ($showSidebar) { require __DIR__ . '/sidebar.php'; } ?>
     </div>
 
     <?php if ($adsOn): ?>

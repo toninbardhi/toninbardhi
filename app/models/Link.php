@@ -67,6 +67,37 @@ class Link
         return $st->fetchAll();
     }
 
+    /** Sponsor attivi per la sidebar "In evidenza" (con categoria). */
+    public static function topFeatured(int $limit): array
+    {
+        self::expireFeatured();
+        $st = self::db()->prepare(
+            "SELECT l.*, c.name AS category_name, c.path AS category_path
+             FROM links l JOIN categories c ON c.id = l.category_id
+             WHERE l.featured = 1 AND l.status = 'approved'
+             ORDER BY l.featured_position ASC, l.created_at DESC
+             LIMIT ?"
+        );
+        $st->bindValue(1, $limit, PDO::PARAM_INT);
+        $st->execute();
+        return $st->fetchAll();
+    }
+
+    /** Ultimi siti approvati per la sidebar "Aggiunti di recente". */
+    public static function recent(int $limit): array
+    {
+        $st = self::db()->prepare(
+            "SELECT l.*, c.name AS category_name, c.path AS category_path
+             FROM links l JOIN categories c ON c.id = l.category_id
+             WHERE l.status = 'approved'
+             ORDER BY l.created_at DESC, l.id DESC
+             LIMIT ?"
+        );
+        $st->bindValue(1, $limit, PDO::PARAM_INT);
+        $st->execute();
+        return $st->fetchAll();
+    }
+
     /** Tutti gli sponsor attivi (elenco globale). */
     public static function allFeatured(): array
     {

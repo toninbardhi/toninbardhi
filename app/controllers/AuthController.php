@@ -9,7 +9,7 @@ class AuthController
         if (is_logged_in()) {
             redirect('/admin');
         }
-        view('auth/login', ['title' => 'Accesso']);
+        view('auth/login', ['title' => 'Accesso', 'hideSidebar' => true]);
     }
 
     public static function login(): void
