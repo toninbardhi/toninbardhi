@@ -82,16 +82,125 @@ INSERT INTO `users` (`name`,`email`,`password_hash`,`role`) VALUES
   ('Amministratore','admin@example.com',
    '$2y$12$mgJg4RkAWS1TsoaswMD.lu/ZVoQ2RnAMaUnqOWOSS1jE/UhLyWtK2','admin');
 
--- Categorie di esempio
+-- ------------------------------------------------------------
+--  Categorie: struttura Open Directory / Curlie (in italiano)
+--  15 categorie principali con sottocategorie rappresentative.
+-- ------------------------------------------------------------
 INSERT INTO `categories` (`id`,`parent_id`,`name`,`slug`,`path`,`description`,`sort_order`) VALUES
-  (1, NULL, 'Arte',        'arte',        'arte',            'Musica, cinema, letteratura e arti visive.', 1),
-  (2, NULL, 'Informatica', 'informatica', 'informatica',     'Software, hardware, internet e programmazione.', 2),
-  (3, NULL, 'Scienza',     'scienza',     'scienza',         'Fisica, biologia, matematica e ricerca.', 3),
-  (4, 1,    'Cinema',      'cinema',      'arte/cinema',     'Film, registi, recensioni.', 1),
-  (5, 2,    'Programmazione','programmazione','informatica/programmazione','Linguaggi e sviluppo software.', 1);
+  -- Livello principale
+  (1,  NULL, 'Affari',            'affari',            'affari',            'Aziende, lavoro, finanza ed economia.', 1),
+  (2,  NULL, 'Arte',              'arte',              'arte',              'Cinema, musica, letteratura, fotografia e spettacolo.', 2),
+  (3,  NULL, 'Computer',          'computer',          'computer',          'Software, hardware, internet e programmazione.', 3),
+  (4,  NULL, 'Consultazione',     'consultazione',     'consultazione',     'Biblioteche, dizionari, enciclopedie e istruzione.', 4),
+  (5,  NULL, 'Casa',              'casa',              'casa',              'Cucina, giardinaggio, famiglia e fai da te.', 5),
+  (6,  NULL, 'Giochi',            'giochi',            'giochi',            'Videogiochi, giochi da tavolo, di ruolo e online.', 6),
+  (7,  NULL, 'Notizie',           'notizie',           'notizie',           'Quotidiani, riviste, meteo e attualità.', 7),
+  (8,  NULL, 'Ragazzi e giovani', 'ragazzi-e-giovani', 'ragazzi-e-giovani', 'Contenuti per bambini, ragazzi e scuola.', 8),
+  (9,  NULL, 'Regionale',         'regionale',         'regionale',         'Siti per area geografica e paese.', 9),
+  (10, NULL, 'Salute',            'salute',            'salute',            'Medicina, alimentazione, fitness e benessere.', 10),
+  (11, NULL, 'Scienza',           'scienza',           'scienza',           'Fisica, biologia, matematica, astronomia e chimica.', 11),
+  (12, NULL, 'Shopping',          'shopping',          'shopping',          'Negozi online e acquisti per categoria.', 12),
+  (13, NULL, 'Società',           'societa',           'societa',           'Politica, religione, storia e filosofia.', 13),
+  (14, NULL, 'Sport',             'sport',             'sport',             'Discipline sportive, squadre e competizioni.', 14),
+  (15, NULL, 'Tempo libero',      'tempo-libero',      'tempo-libero',      'Viaggi, hobby, cucina, umorismo e outdoor.', 15),
 
+  -- Affari (1)
+  (16, 1, 'Lavoro',          'lavoro',          'affari/lavoro',          NULL, 1),
+  (17, 1, 'Finanza',         'finanza',         'affari/finanza',         NULL, 2),
+  (18, 1, 'Marketing',       'marketing',       'affari/marketing',       NULL, 3),
+  (19, 1, 'Piccole imprese', 'piccole-imprese', 'affari/piccole-imprese', NULL, 4),
+
+  -- Arte (2)
+  (20, 2, 'Cinema',      'cinema',      'arte/cinema',      NULL, 1),
+  (21, 2, 'Musica',      'musica',      'arte/musica',      NULL, 2),
+  (22, 2, 'Letteratura', 'letteratura', 'arte/letteratura', NULL, 3),
+  (23, 2, 'Fotografia',  'fotografia',  'arte/fotografia',  NULL, 4),
+  (24, 2, 'Televisione', 'televisione', 'arte/televisione', NULL, 5),
+
+  -- Computer (3)
+  (25, 3, 'Software',       'software',       'computer/software',       NULL, 1),
+  (26, 3, 'Hardware',       'hardware',       'computer/hardware',       NULL, 2),
+  (27, 3, 'Internet',       'internet',       'computer/internet',       NULL, 3),
+  (28, 3, 'Programmazione', 'programmazione', 'computer/programmazione', NULL, 4),
+  (29, 3, 'Sicurezza',      'sicurezza',      'computer/sicurezza',      NULL, 5),
+
+  -- Consultazione (4)
+  (30, 4, 'Biblioteche',  'biblioteche',  'consultazione/biblioteche',  NULL, 1),
+  (31, 4, 'Dizionari',    'dizionari',    'consultazione/dizionari',    NULL, 2),
+  (32, 4, 'Enciclopedie', 'enciclopedie', 'consultazione/enciclopedie', NULL, 3),
+  (33, 4, 'Istruzione',   'istruzione',   'consultazione/istruzione',   NULL, 4),
+
+  -- Casa (5)
+  (34, 5, 'Cucina',      'cucina',      'casa/cucina',      NULL, 1),
+  (35, 5, 'Giardinaggio','giardinaggio','casa/giardinaggio',NULL, 2),
+  (36, 5, 'Famiglia',    'famiglia',    'casa/famiglia',    NULL, 3),
+  (37, 5, 'Fai da te',   'fai-da-te',   'casa/fai-da-te',   NULL, 4),
+
+  -- Giochi (6)
+  (38, 6, 'Videogiochi',     'videogiochi',     'giochi/videogiochi',     NULL, 1),
+  (39, 6, 'Giochi da tavolo','giochi-da-tavolo','giochi/giochi-da-tavolo',NULL, 2),
+  (40, 6, 'Giochi di ruolo', 'giochi-di-ruolo', 'giochi/giochi-di-ruolo', NULL, 3),
+  (41, 6, 'Giochi online',   'giochi-online',   'giochi/giochi-online',   NULL, 4),
+
+  -- Notizie (7)
+  (42, 7, 'Quotidiani', 'quotidiani', 'notizie/quotidiani', NULL, 1),
+  (43, 7, 'Riviste',    'riviste',    'notizie/riviste',    NULL, 2),
+  (44, 7, 'Meteo',      'meteo',      'notizie/meteo',      NULL, 3),
+  (45, 7, 'Attualità',  'attualita',  'notizie/attualita',  NULL, 4),
+
+  -- Ragazzi e giovani (8)
+  (46, 8, 'Scuola',       'scuola',       'ragazzi-e-giovani/scuola',       NULL, 1),
+  (47, 8, 'Divertimento', 'divertimento', 'ragazzi-e-giovani/divertimento', NULL, 2),
+  (48, 8, 'Fumetti',      'fumetti',      'ragazzi-e-giovani/fumetti',      NULL, 3),
+
+  -- Regionale (9)
+  (49, 9, 'Italia',  'italia',  'regionale/italia',  NULL, 1),
+  (50, 9, 'Europa',  'europa',  'regionale/europa',  NULL, 2),
+  (51, 9, 'America', 'america', 'regionale/america', NULL, 3),
+  (52, 9, 'Asia',    'asia',    'regionale/asia',    NULL, 4),
+
+  -- Salute (10)
+  (53, 10, 'Medicina',      'medicina',      'salute/medicina',      NULL, 1),
+  (54, 10, 'Alimentazione', 'alimentazione', 'salute/alimentazione', NULL, 2),
+  (55, 10, 'Fitness',       'fitness',       'salute/fitness',       NULL, 3),
+  (56, 10, 'Benessere',     'benessere',     'salute/benessere',     NULL, 4),
+
+  -- Scienza (11)
+  (57, 11, 'Fisica',     'fisica',     'scienza/fisica',     NULL, 1),
+  (58, 11, 'Biologia',   'biologia',   'scienza/biologia',   NULL, 2),
+  (59, 11, 'Matematica', 'matematica', 'scienza/matematica', NULL, 3),
+  (60, 11, 'Astronomia', 'astronomia', 'scienza/astronomia', NULL, 4),
+  (61, 11, 'Chimica',    'chimica',    'scienza/chimica',    NULL, 5),
+
+  -- Shopping (12)
+  (62, 12, 'Abbigliamento', 'abbigliamento', 'shopping/abbigliamento', NULL, 1),
+  (63, 12, 'Elettronica',   'elettronica',   'shopping/elettronica',   NULL, 2),
+  (64, 12, 'Libri',         'libri',         'shopping/libri',         NULL, 3),
+  (65, 12, 'Casa',          'casa',          'shopping/casa',          NULL, 4),
+
+  -- Società (13)
+  (66, 13, 'Politica',  'politica',  'societa/politica',  NULL, 1),
+  (67, 13, 'Religione', 'religione', 'societa/religione', NULL, 2),
+  (68, 13, 'Storia',    'storia',    'societa/storia',    NULL, 3),
+  (69, 13, 'Filosofia', 'filosofia', 'societa/filosofia', NULL, 4),
+
+  -- Sport (14)
+  (70, 14, 'Calcio',   'calcio',   'sport/calcio',   NULL, 1),
+  (71, 14, 'Tennis',   'tennis',   'sport/tennis',   NULL, 2),
+  (72, 14, 'Basket',   'basket',   'sport/basket',   NULL, 3),
+  (73, 14, 'Ciclismo', 'ciclismo', 'sport/ciclismo', NULL, 4),
+  (74, 14, 'Motori',   'motori',   'sport/motori',   NULL, 5),
+
+  -- Tempo libero (15)
+  (75, 15, 'Viaggi',   'viaggi',   'tempo-libero/viaggi',   NULL, 1),
+  (76, 15, 'Cucina',   'cucina',   'tempo-libero/cucina',   NULL, 2),
+  (77, 15, 'Hobby',    'hobby',    'tempo-libero/hobby',    NULL, 3),
+  (78, 15, 'Umorismo', 'umorismo', 'tempo-libero/umorismo', NULL, 4),
+  (79, 15, 'Outdoor',  'outdoor',  'tempo-libero/outdoor',  NULL, 5);
+
+-- Alcuni link di esempio (puoi eliminarli e inserire i tuoi).
 INSERT INTO `links` (`category_id`,`title`,`url`,`description`,`status`,`featured`,`featured_position`,`featured_until`) VALUES
-  (5, 'Corso PHP Sponsor', 'https://esempio.it', 'Esempio di sito in evidenza (a pagamento).', 'approved', 1, 1, DATE_ADD(CURDATE(), INTERVAL 1 YEAR)),
-  (5, 'PHP.net', 'https://www.php.net', 'Sito ufficiale del linguaggio PHP con documentazione completa.', 'approved', 0, 0, NULL),
-  (5, 'MDN Web Docs', 'https://developer.mozilla.org', 'Documentazione per sviluppatori web di Mozilla.', 'approved', 0, 0, NULL),
-  (4, 'IMDb', 'https://www.imdb.com', 'Il più grande database di film e serie TV.', 'approved', 0, 0, NULL);
+  (28, 'Corso PHP Sponsor', 'https://esempio.it', 'Esempio di sito in evidenza (a pagamento).', 'approved', 1, 1, DATE_ADD(CURDATE(), INTERVAL 1 YEAR)),
+  (28, 'PHP.net', 'https://www.php.net', 'Sito ufficiale del linguaggio PHP con documentazione completa.', 'approved', 0, 0, NULL),
+  (28, 'MDN Web Docs', 'https://developer.mozilla.org', 'Documentazione per sviluppatori web di Mozilla.', 'approved', 0, 0, NULL),
+  (20, 'IMDb', 'https://www.imdb.com', 'Il più grande database di film e serie TV.', 'approved', 0, 0, NULL);
