@@ -48,8 +48,12 @@ $totalPages = (int) ceil($total / $perPage);
   <?php else: ?>
     <ul class="link-list">
       <?php foreach ($links as $l): ?>
-        <li>
-          <div class="title"><a href="<?= e($l['url']) ?>" target="_blank" rel="nofollow noopener"><?= e($l['title']) ?></a></div>
+        <?php $feat = !empty($l['featured']); ?>
+        <li class="<?= $feat ? 'is-featured' : '' ?>">
+          <div class="title">
+            <a href="<?= e($l['url']) ?>" target="_blank" rel="nofollow noopener sponsored"><?= e($l['title']) ?></a>
+            <?php if ($feat): ?><span class="badge featured">Sponsorizzato</span><?php endif; ?>
+          </div>
           <div class="url"><?= e($l['url']) ?></div>
           <?php if (!empty($l['description'])): ?>
             <div class="desc"><?= e($l['description']) ?></div>

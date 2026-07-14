@@ -25,6 +25,7 @@ $badge = $pending_badge ?? 0;
     <a class="<?= $uri === url('/admin') || $uri === '/admin' ? 'active' : '' ?>" href="<?= e(url('/admin')) ?>">Pannello</a>
     <a class="<?= $nav('/admin/categories') ?>" href="<?= e(url('/admin/categories')) ?>">Categorie</a>
     <a class="<?= $nav('/admin/links') ?>" href="<?= e(url('/admin/links')) ?>">Link</a>
+    <a class="<?= $nav('/admin/featured') ?>" href="<?= e(url('/admin/featured')) ?>">★ In evidenza</a>
     <a class="<?= $nav('/admin/suggestions') ?>" href="<?= e(url('/admin/suggestions')) ?>">
       Suggerimenti
       <?php if ($badge > 0): ?><span class="count-pill"><?= (int)$badge ?></span><?php endif; ?>

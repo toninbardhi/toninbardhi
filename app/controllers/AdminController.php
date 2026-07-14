@@ -186,6 +186,26 @@ class AdminController
         redirect('/admin/suggestions');
     }
 
+    /* ============================= In evidenza ============================= */
+
+    public static function featured(): void
+    {
+        require_login();
+        self::render('admin/featured', [
+            'title'    => 'Link in evidenza',
+            'featured' => Link::allFeatured(),
+        ]);
+    }
+
+    public static function featuredRemove(int $id): void
+    {
+        require_login();
+        csrf_check();
+        Link::unfeature($id);
+        flash('success', 'Evidenza rimossa: il link è tornato normale.');
+        redirect('/admin/featured');
+    }
+
     /* =============================== Profilo =============================== */
 
     public static function profile(): void
@@ -345,18 +365,47 @@ class AdminController
         $description = input('description');
         $status = input('status') === 'pending' ? 'pending' : 'approved';
 
+        // Campi "in evidenza" (sponsorizzazione a pagamento).
+        $featured = input('featured') === '1';
+        $position = (int) input('featured_position');
+        $until    = input('featured_until');
+
         $errors = [];
         if ($title === '')                          $errors[] = 'Il titolo è obbligatorio.';
         if (!filter_var($url, FILTER_VALIDATE_URL)) $errors[] = 'URL non valido.';
         if (!Category::find($categoryId))           $errors[] = 'Categoria non valida.';
 
+        if ($featured) {
+            if ($position < 1 || $position > Link::FEATURED_SLOTS) {
+                $position = Link::FEATURED_SLOTS; // in coda tra gli sponsor
+            }
+            if ($until === '' || !self::isValidDate($until)) {
+                // Default: un anno da oggi.
+                $until = date('Y-m-d', strtotime('+1 year'));
+            } elseif ($until < date('Y-m-d')) {
+                $errors[] = 'La data di scadenza dell\'evidenza è nel passato.';
+            }
+        } else {
+            $position = 0;
+            $until = null;
+        }
+
         return [[
-            'category_id' => $categoryId,
-            'title'       => $title,
-            'url'         => $url,
-            'description' => $description !== '' ? $description : null,
-            'status'      => $status,
+            'category_id'       => $categoryId,
+            'title'             => $title,
+            'url'               => $url,
+            'description'       => $description !== '' ? $description : null,
+            'status'            => $status,
+            'featured'          => $featured ? 1 : 0,
+            'featured_position' => $position,
+            'featured_until'    => $until,
         ], $errors];
+    }
+
+    private static function isValidDate(string $d): bool
+    {
+        $dt = DateTime::createFromFormat('Y-m-d', $d);
+        return $dt !== false && $dt->format('Y-m-d') === $d;
     }
 
     private static function nullable(string $key): ?string

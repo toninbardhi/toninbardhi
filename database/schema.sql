@@ -56,11 +56,15 @@ CREATE TABLE `links` (
   `description`  TEXT NULL,
   `status`       ENUM('approved','pending') NOT NULL DEFAULT 'approved',
   `submitted_by` VARCHAR(190) NULL,   -- email di chi suggerisce (form pubblico)
+  `featured`         TINYINT(1) NOT NULL DEFAULT 0,   -- 1 = in evidenza (a pagamento)
+  `featured_position` INT NOT NULL DEFAULT 0,         -- ordine tra gli sponsor (1 = primo)
+  `featured_until`   DATE NULL,                       -- scadenza del posizionamento
   `sort_order`   INT NOT NULL DEFAULT 0,
   `created_at`   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_links_category` (`category_id`),
   KEY `idx_links_status` (`status`),
+  KEY `idx_links_featured` (`featured`,`featured_position`),
   FULLTEXT KEY `ft_links_search` (`title`,`description`),
   CONSTRAINT `fk_links_category` FOREIGN KEY (`category_id`)
       REFERENCES `categories`(`id`) ON DELETE CASCADE
@@ -86,7 +90,8 @@ INSERT INTO `categories` (`id`,`parent_id`,`name`,`slug`,`path`,`description`,`s
   (4, 1,    'Cinema',      'cinema',      'arte/cinema',     'Film, registi, recensioni.', 1),
   (5, 2,    'Programmazione','programmazione','informatica/programmazione','Linguaggi e sviluppo software.', 1);
 
-INSERT INTO `links` (`category_id`,`title`,`url`,`description`,`status`) VALUES
-  (5, 'PHP.net', 'https://www.php.net', 'Sito ufficiale del linguaggio PHP con documentazione completa.', 'approved'),
-  (5, 'MDN Web Docs', 'https://developer.mozilla.org', 'Documentazione per sviluppatori web di Mozilla.', 'approved'),
-  (4, 'IMDb', 'https://www.imdb.com', 'Il più grande database di film e serie TV.', 'approved');
+INSERT INTO `links` (`category_id`,`title`,`url`,`description`,`status`,`featured`,`featured_position`,`featured_until`) VALUES
+  (5, 'Corso PHP Sponsor', 'https://esempio.it', 'Esempio di sito in evidenza (a pagamento).', 'approved', 1, 1, DATE_ADD(CURDATE(), INTERVAL 1 YEAR)),
+  (5, 'PHP.net', 'https://www.php.net', 'Sito ufficiale del linguaggio PHP con documentazione completa.', 'approved', 0, 0, NULL),
+  (5, 'MDN Web Docs', 'https://developer.mozilla.org', 'Documentazione per sviluppatori web di Mozilla.', 'approved', 0, 0, NULL),
+  (4, 'IMDb', 'https://www.imdb.com', 'Il più grande database di film e serie TV.', 'approved', 0, 0, NULL);

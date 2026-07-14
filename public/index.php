@@ -84,6 +84,9 @@ $routes = [
     ['POST', '#^/admin/links/(\d+)/edit$#',  fn($id)   => AdminController::linkUpdate((int)$id)],
     ['POST', '#^/admin/links/(\d+)/delete$#',fn($id)   => AdminController::linkDelete((int)$id)],
 
+    ['GET',  '#^/admin/featured$#',          fn()      => AdminController::featured()],
+    ['POST', '#^/admin/featured/(\d+)/remove$#', fn($id)=> AdminController::featuredRemove((int)$id)],
+
     ['GET',  '#^/admin/suggestions$#',       fn()      => AdminController::suggestions()],
     ['POST', '#^/admin/suggestions/(\d+)/approve$#', fn($id)=> AdminController::suggestionApprove((int)$id)],
     ['POST', '#^/admin/suggestions/(\d+)/reject$#',  fn($id)=> AdminController::suggestionReject((int)$id)],

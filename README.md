@@ -12,6 +12,9 @@ su qualsiasi hosting condiviso (testato pensando a **Netsons**).
 - 🔎 **Ricerca** full-text su titoli, descrizioni e categorie
 - 📥 **Suggerisci un sito**: form pubblico che crea proposte da approvare
 - ✅ **Coda di moderazione** dei suggerimenti (approva / rifiuta)
+- ⭐ **Posizionamento a pagamento**: metti un link "in evidenza" (badge
+  *Sponsorizzato*) tra i primi 5 della categoria, con posizione e scadenza
+  (precompilata a 1 anno); alla scadenza torna normale automaticamente
 - 👥 **Utenti con ruoli**: `admin` (gestisce anche gli utenti) ed `editor`
 - 👤 **Profilo personale**: ogni utente cambia nome/email/password (con verifica della password attuale)
 - 🔐 Login sicuro, password con hash bcrypt, protezione CSRF, escaping output
@@ -52,6 +55,28 @@ su qualsiasi hosting condiviso (testato pensando a **Netsons**).
    - Vai su `https://iltuodominio.it/login`
    - Utente: **admin@example.com** — Password: **admin123**
    - ⚠️ **Cambia subito la password**: Utenti → modifica il tuo account.
+
+## Posizionamento a pagamento (link in evidenza)
+
+Chi vuole comparire in cima alla propria categoria ti paga (bonifico, PayPal,
+come preferisci) e tu lo metti in evidenza dal pannello:
+
+1. **Link** → apri il link (o creane uno) → sezione **★ In evidenza**
+2. Attiva la spunta, scegli la **posizione** (1–5) e la **scadenza**
+   (precompilata a 1 anno)
+3. Il link appare per primo nella categoria e nella ricerca, con il badge
+   **Sponsorizzato**
+4. Alla scadenza torna automaticamente un link normale
+
+La pagina **★ In evidenza** dell'admin elenca tutti gli sponsor attivi con i
+giorni mancanti alla scadenza e permette di rimuovere l'evidenza con un clic.
+
+> Il pagamento è gestito manualmente (nessuna commissione). In futuro si può
+> aggiungere PayPal o Stripe per l'acquisto self-service.
+
+**Aggiorni da una versione precedente?** Esegui la migrazione
+[`database/migrations/2026_07_add_featured.sql`](database/migrations/2026_07_add_featured.sql)
+da phpMyAdmin per aggiungere le colonne necessarie.
 
 ## Struttura del progetto
 
