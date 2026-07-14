@@ -15,12 +15,28 @@ $old = $old ?? [];
 <div class="panel">
   <form action="<?= e(url('/suggest')) ?>" method="post">
     <?= csrf_field() ?>
+    <?php $cats = $old['cats'] ?? [null, null, null]; ?>
     <div class="field">
-      <label for="category_id">Categoria *</label>
-      <select name="category_id" id="category_id" required>
+      <label for="category_id_1">Categoria principale *</label>
+      <select name="category_id_1" id="category_id_1" required>
         <option value="">— seleziona —</option>
-        <?= category_options($categories, $old['categoryId'] ?? null) ?>
+        <?= category_options($categories, $cats[0] ?? null) ?>
       </select>
+    </div>
+    <div class="field">
+      <label for="category_id_2">Seconda categoria (facoltativa)</label>
+      <select name="category_id_2" id="category_id_2">
+        <option value="">— nessuna —</option>
+        <?= category_options($categories, $cats[1] ?? null) ?>
+      </select>
+    </div>
+    <div class="field">
+      <label for="category_id_3">Terza categoria (facoltativa)</label>
+      <select name="category_id_3" id="category_id_3">
+        <option value="">— nessuna —</option>
+        <?= category_options($categories, $cats[2] ?? null) ?>
+      </select>
+      <div class="hint">Puoi proporre il sito in massimo 3 categorie. La promozione a pagamento riguarda invece una sola categoria.</div>
     </div>
     <div class="field">
       <label for="title">Titolo del sito *</label>

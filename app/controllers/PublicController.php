@@ -123,7 +123,20 @@ class PublicController
             return;
         }
 
-        $categoryId = (int) input('category_id');
+        // Fino a 3 categorie: la prima è obbligatoria, le altre facoltative.
+        $catInputs = [
+            (int) input('category_id_1'),
+            (int) input('category_id_2'),
+            (int) input('category_id_3'),
+        ];
+        // Tieni solo gli ID validi e distinti.
+        $categoryIds = [];
+        foreach ($catInputs as $cid) {
+            if ($cid > 0 && !in_array($cid, $categoryIds, true) && Category::find($cid)) {
+                $categoryIds[] = $cid;
+            }
+        }
+
         $title      = input('title');
         $url        = input('url');
         $description= input('description');
@@ -132,7 +145,7 @@ class PublicController
         $errors = $spam;
         if ($title === '')                          $errors[] = 'Il titolo è obbligatorio.';
         if (!filter_var($url, FILTER_VALIDATE_URL)) $errors[] = 'Inserisci un URL valido (inizia con http:// o https://).';
-        if (!Category::find($categoryId))           $errors[] = 'Seleziona una categoria valida.';
+        if (!$categoryIds)                          $errors[] = 'Seleziona almeno una categoria valida.';
         if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'L\'email inserita non è valida.';
         }
@@ -143,19 +156,28 @@ class PublicController
                 'categories' => Category::all(),
                 'errors'     => $errors,
                 'captcha'    => antispam_challenge(), // nuova sfida
-                'old'        => compact('categoryId', 'title', 'url', 'description', 'email'),
+                'old'        => [
+                    'cats'        => $catInputs,
+                    'title'       => $title,
+                    'url'         => $url,
+                    'description' => $description,
+                    'email'       => $email,
+                ],
             ]);
             return;
         }
 
-        Link::create([
-            'category_id'  => $categoryId,
-            'title'        => $title,
-            'url'          => $url,
-            'description'  => $description !== '' ? $description : null,
-            'status'       => 'pending',
-            'submitted_by' => $email !== '' ? $email : null,
-        ]);
+        // Crea una proposta (pending) per ciascuna categoria scelta.
+        foreach ($categoryIds as $cid) {
+            Link::create([
+                'category_id'  => $cid,
+                'title'        => $title,
+                'url'          => $url,
+                'description'  => $description !== '' ? $description : null,
+                'status'       => 'pending',
+                'submitted_by' => $email !== '' ? $email : null,
+            ]);
+        }
 
         view('public/suggest_done', ['title' => 'Grazie!']);
     }

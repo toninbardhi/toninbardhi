@@ -10,7 +10,8 @@ su qualsiasi hosting condiviso (testato pensando a **Netsons**).
 - 🌳 **Categorie ad albero** (categorie e sottocategorie illimitate)
 - 🔗 **Link/siti** dentro le categorie (titolo, URL, descrizione)
 - 🔎 **Ricerca** full-text su titoli, descrizioni e categorie
-- 📥 **Suggerisci un sito**: form pubblico che crea proposte da approvare
+- 📥 **Suggerisci un sito**: form pubblico (fino a **3 categorie** per proposta) che crea proposte da approvare
+- 📦 **Importazione RDF** in stile DMOZ/Curlie: script CLI per popolare categorie (ed eventualmente siti) dai dump dell'Open Directory
 - ✅ **Coda di moderazione** dei suggerimenti (approva / rifiuta)
 - ⭐ **Posizionamento a pagamento**: metti un link "in evidenza" (badge
   *Sponsorizzato*) tra i primi 5 della categoria, con posizione e scadenza
@@ -106,6 +107,52 @@ niente reCAPTCHA e nessun problema di privacy/GDPR):
 - **controllo tempo**: invii troppo rapidi vengono bloccati.
 
 Si configura in `app/config.php` → `antispam` (`enabled`, `min_secs`).
+
+## Importare le categorie da DMOZ / Curlie (RDF)
+
+Il CMS include uno script CLI (`bin/import_rdf.php`) che legge i dump RDF
+dell'Open Directory e popola le categorie (ed eventualmente i siti).
+
+### 1. Procurarsi il dump
+
+DMOZ ha chiuso nel 2017 e **Curlie non pubblica più un dump ufficiale**
+scaricabile. Si usano quindi le **copie archiviate** del dump DMOZ 2017:
+
+- `structure.rdf.u8` → l'albero delle categorie
+- `content.rdf.u8` → i siti (titolo, URL, descrizione, categoria)
+
+Si trovano su archivi come *archive.org* cercando "dmoz rdf dump" o sui vari
+mirror `dmoztools`. Sono file grandi (centinaia di MB compressi), da
+scompattare prima dell'uso.
+
+> ⚠️ **Attenzione ai limiti dell'hosting.** Il dump completo contiene ~1M di
+> categorie e ~3,8M di siti: su un hosting condiviso (Netsons) rischi di
+> superare la quota del database. Conviene importare **solo la struttura** o
+> **un ramo** (es. il ramo italiano). I link del 2017 sono spesso obsoleti.
+
+### 2. Eseguire l'import (via SSH / riga di comando)
+
+```bash
+# Tutte le categorie (solo struttura, nessun sito)
+php bin/import_rdf.php --structure=dump/structure.rdf.u8
+
+# Solo il ramo italiano, che diventa la radice dell'albero
+php bin/import_rdf.php --structure=dump/structure.rdf.u8 \
+     --branch=Top/World/Italiano --strip=Top/World/Italiano
+
+# Struttura + siti
+php bin/import_rdf.php --structure=dump/structure.rdf.u8 \
+     --content=dump/content.rdf.u8 --with-sites
+
+# Prova rapida (solo 100 elementi) o azzeramento preventivo
+php bin/import_rdf.php --structure=dump/structure.rdf.u8 --limit=100
+php bin/import_rdf.php --structure=dump/structure.rdf.u8 --fresh
+```
+
+Lo script usa `XMLReader` in streaming, quindi gestisce file di grandi
+dimensioni senza esaurire la memoria, ed è idempotente (le categorie già
+presenti non vengono duplicate). Se il tuo piano Netsons non ha accesso SSH,
+esegui l'import **in locale** e poi carica il database.
 
 ## Struttura del progetto
 
