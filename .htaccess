@@ -1,0 +1,31 @@
+# ============================================================
+#  DirCMS - Configurazione Apache (radice del sito)
+#  Da usare quando carichi TUTTO il progetto in public_html.
+# ============================================================
+
+# Evita di mostrare l'elenco dei file di una cartella
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Se il sito è in una sottocartella, imposta qui la base, es:
+    # RewriteBase /
+
+    # Blocca l'accesso diretto alle cartelle applicative
+    RewriteRule ^(app|database)/ - [F,L]
+
+    # Le richieste a file o cartelle realmente esistenti
+    # (es. /assets/css/style.css) vengono servite direttamente
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Tutto il resto passa dal front controller
+    RewriteRule ^ public/index.php [L]
+</IfModule>
+
+# Impedisci il download dei file di configurazione
+<FilesMatch "\.(sql|md|example\.php)$">
+    Require all denied
+</FilesMatch>

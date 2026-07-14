@@ -1,0 +1,132 @@
+/* ============================================================
+   DirCMS - Foglio di stile
+   ============================================================ */
+:root{
+  --bg:#f5f6f8; --panel:#ffffff; --ink:#1f2733; --muted:#6b7684;
+  --brand:#2a6df5; --brand-dark:#1a52c9; --border:#e2e6ec;
+  --ok:#1f9d55; --warn:#d97706; --danger:#dc2626; --pending:#fff7ed;
+  --radius:10px; --shadow:0 1px 3px rgba(20,30,50,.08);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink); background:var(--bg); line-height:1.5;
+}
+a{color:var(--brand); text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%}
+
+/* Layout */
+.container{max-width:960px; margin:0 auto; padding:0 16px}
+.site-header{background:var(--panel); border-bottom:1px solid var(--border)}
+.site-header .bar{display:flex; align-items:center; gap:16px; padding:14px 0; flex-wrap:wrap}
+.logo{font-size:1.35rem; font-weight:700; color:var(--ink)}
+.logo:hover{text-decoration:none}
+.site-header form.search{margin-left:auto; display:flex; gap:6px}
+.site-header input[type=search]{
+  padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius);
+  min-width:200px; font-size:.95rem;
+}
+.site-footer{color:var(--muted); text-align:center; padding:28px 0; font-size:.85rem}
+main{padding:24px 0; min-height:60vh}
+
+/* Bottoni */
+.btn{
+  display:inline-block; padding:8px 16px; border-radius:var(--radius);
+  border:1px solid transparent; background:var(--brand); color:#fff;
+  font-size:.95rem; cursor:pointer; font-family:inherit;
+}
+.btn:hover{background:var(--brand-dark); text-decoration:none}
+.btn.small{padding:5px 10px; font-size:.85rem}
+.btn.secondary{background:#eef1f6; color:var(--ink); border-color:var(--border)}
+.btn.secondary:hover{background:#e3e8f0}
+.btn.danger{background:var(--danger)}
+.btn.danger:hover{background:#b91c1c}
+.btn.ok{background:var(--ok)}
+.btn.ok:hover{background:#178045}
+
+/* Card / pannelli */
+.panel{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:20px; margin-bottom:20px}
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px}
+.cat-card{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+  padding:16px; box-shadow:var(--shadow)}
+.cat-card h3{margin:0 0 6px}
+.cat-card p{margin:0; color:var(--muted); font-size:.9rem}
+.cat-card .count{font-size:.8rem; color:var(--muted)}
+
+/* Breadcrumb */
+.breadcrumb{font-size:.9rem; color:var(--muted); margin:0 0 16px}
+.breadcrumb a{color:var(--muted)}
+.breadcrumb .sep{margin:0 6px}
+
+/* Elenco link */
+.link-list{list-style:none; padding:0; margin:0}
+.link-list li{padding:14px 0; border-bottom:1px solid var(--border)}
+.link-list li:last-child{border-bottom:0}
+.link-list .title{font-size:1.05rem; font-weight:600}
+.link-list .url{font-size:.82rem; color:var(--ok); word-break:break-all}
+.link-list .desc{color:var(--muted); margin-top:2px; font-size:.92rem}
+.link-list .cat{font-size:.8rem; color:var(--muted)}
+
+/* Form */
+.field{margin-bottom:16px}
+.field label{display:block; font-weight:600; margin-bottom:5px; font-size:.92rem}
+.field input, .field select, .field textarea{
+  width:100%; padding:9px 12px; border:1px solid var(--border);
+  border-radius:var(--radius); font-size:.95rem; font-family:inherit; background:#fff;
+}
+.field textarea{min-height:90px; resize:vertical}
+.field .hint{font-size:.8rem; color:var(--muted); margin-top:4px}
+.form-actions{display:flex; gap:10px; align-items:center; margin-top:8px}
+
+/* Messaggi */
+.alert{padding:12px 16px; border-radius:var(--radius); margin-bottom:18px; font-size:.92rem}
+.alert.success{background:#e7f6ed; color:#0f6b38; border:1px solid #b7e3c6}
+.alert.error{background:#fdecec; color:#a01919; border:1px solid #f3c2c2}
+.alert ul{margin:6px 0 0; padding-left:20px}
+
+/* Badge */
+.badge{display:inline-block; padding:2px 8px; border-radius:999px; font-size:.72rem; font-weight:600}
+.badge.pending{background:#ffedd5; color:#9a3412}
+.badge.approved{background:#dcfce7; color:#166534}
+.badge.admin{background:#dbeafe; color:#1e40af}
+.badge.editor{background:#f3e8ff; color:#6b21a8}
+
+/* Tabelle */
+table.data{width:100%; border-collapse:collapse; background:var(--panel);
+  border:1px solid var(--border); border-radius:var(--radius); overflow:hidden}
+table.data th, table.data td{padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); font-size:.92rem}
+table.data th{background:#f7f9fc; font-size:.8rem; text-transform:uppercase; letter-spacing:.03em; color:var(--muted)}
+table.data tr:last-child td{border-bottom:0}
+.actions-cell{white-space:nowrap; display:flex; gap:6px}
+.actions-cell form{display:inline}
+
+.muted{color:var(--muted)}
+h1{margin-top:0}
+.page-head{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:18px}
+.pagination{display:flex; gap:8px; margin-top:20px; align-items:center; justify-content:center}
+
+/* ---------- Area admin ---------- */
+.admin-shell{display:flex; min-height:100vh}
+.admin-nav{width:220px; background:#111827; color:#cbd5e1; padding:18px 0; flex-shrink:0}
+.admin-nav .brand{color:#fff; font-weight:700; padding:0 20px 16px; font-size:1.1rem; display:block}
+.admin-nav a{display:flex; justify-content:space-between; align-items:center; color:#cbd5e1;
+  padding:10px 20px; font-size:.93rem}
+.admin-nav a:hover{background:#1f2937; color:#fff; text-decoration:none}
+.admin-nav a.active{background:var(--brand); color:#fff}
+.admin-nav .np{font-size:.75rem}
+.admin-main{flex:1; padding:26px 32px; max-width:100%}
+.admin-topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:22px;
+  padding-bottom:14px; border-bottom:1px solid var(--border)}
+.admin-nav .count-pill{background:var(--warn); color:#fff; border-radius:999px; padding:1px 8px; font-size:.72rem}
+.stat-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:16px}
+.stat{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:18px; text-align:center}
+.stat .n{font-size:2rem; font-weight:700; color:var(--brand)}
+.stat .l{color:var(--muted); font-size:.85rem}
+@media(max-width:640px){
+  .admin-shell{flex-direction:column}
+  .admin-nav{width:100%; display:flex; flex-wrap:wrap; padding:8px}
+  .admin-nav .brand{width:100%}
+  .admin-main{padding:18px}
+}

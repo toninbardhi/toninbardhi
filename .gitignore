@@ -1,0 +1,13 @@
+# Configurazione con credenziali reali (NON versionare in produzione)
+# In sviluppo teniamo un config.php di esempio funzionante.
+# Se metti credenziali vere, decommenta la riga sotto:
+# app/config.php
+
+# File di sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Editor
+.vscode/
+.idea/

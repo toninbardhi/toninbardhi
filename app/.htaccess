@@ -1,0 +1,7 @@
+# Nega qualunque accesso web diretto ai file dell'applicazione.
+Require all denied
+# Compatibilità con Apache < 2.4
+<IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+</IfModule>
