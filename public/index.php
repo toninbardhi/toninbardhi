@@ -56,6 +56,7 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $routes = [
     ['GET',  '#^/$#',                        fn()      => PublicController::home()],
     ['GET',  '#^/search$#',                  fn()      => PublicController::search()],
+    ['GET',  '#^/sitemap\.xml$#',            fn()      => PublicController::sitemap()],
     ['GET',  '#^/suggest$#',                 fn()      => PublicController::suggestForm()],
     ['POST', '#^/suggest$#',                 fn()      => PublicController::suggestSubmit()],
 
@@ -66,6 +67,8 @@ $routes = [
 
     // Area amministrativa
     ['GET',  '#^/admin$#',                   fn()      => AdminController::dashboard()],
+    ['GET',  '#^/admin/profile$#',           fn()      => AdminController::profile()],
+    ['POST', '#^/admin/profile$#',           fn()      => AdminController::profileUpdate()],
 
     ['GET',  '#^/admin/categories$#',        fn()      => AdminController::categories()],
     ['GET',  '#^/admin/categories/create$#', fn()      => AdminController::categoryForm()],

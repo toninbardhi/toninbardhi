@@ -9,13 +9,30 @@ function e(?string $v): string
     return htmlspecialchars((string) $v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-/** URL assoluto rispetto alla base configurata. */
+/** URL (relativo alla root del dominio) rispetto alla base configurata. */
 function url(string $path = ''): string
 {
     global $CONFIG;
     $base = rtrim($CONFIG['site']['base_url'] ?? '', '/');
     $path = '/' . ltrim($path, '/');
     return $base . ($path === '/' ? '/' : $path);
+}
+
+/**
+ * URL assoluto (con dominio) per sitemap, canonical e Open Graph.
+ * Usa site.url se configurato, altrimenti lo deduce dalla richiesta.
+ */
+function abs_url(string $path = ''): string
+{
+    global $CONFIG;
+    $root = rtrim($CONFIG['site']['url'] ?? '', '/');
+    if ($root === '') {
+        $scheme = (($_SERVER['HTTPS'] ?? '') === 'on'
+            || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $root = $scheme . '://' . $host;
+    }
+    return $root . url($path);
 }
 
 /** Redirect e stop. */
@@ -137,6 +154,7 @@ function take_flash(): array
  */
 function view(string $view, array $data = [], string $layout = 'layout'): void
 {
+    global $CONFIG;                 // reso disponibile alle view e ai layout
     extract($data, EXTR_SKIP);
     ob_start();
     require APP_PATH . '/views/' . $view . '.php';

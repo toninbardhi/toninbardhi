@@ -186,6 +186,61 @@ class AdminController
         redirect('/admin/suggestions');
     }
 
+    /* =============================== Profilo =============================== */
+
+    public static function profile(): void
+    {
+        require_login();
+        self::render('admin/profile', [
+            'title' => 'Il mio profilo',
+            'user'  => User::find((int) current_user()['id']),
+        ]);
+    }
+
+    public static function profileUpdate(): void
+    {
+        require_login();
+        csrf_check();
+        $id = (int) current_user()['id'];
+        $user = User::find($id);
+
+        $name    = input('name');
+        $email   = input('email');
+        $current = input('current_password');
+        $new     = input('new_password');
+        $confirm = input('confirm_password');
+
+        $errors = [];
+        if ($name === '')                                     $errors[] = 'Il nome è obbligatorio.';
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL))       $errors[] = 'Email non valida.';
+        $other = User::findByEmail($email);
+        if ($other && (int) $other['id'] !== $id)             $errors[] = 'Email già usata da un altro utente.';
+
+        // La password attuale è sempre richiesta per confermare le modifiche.
+        if (!password_verify($current, $user['password_hash'])) {
+            $errors[] = 'La password attuale non è corretta.';
+        }
+        // Cambio password opzionale.
+        $newPassword = null;
+        if ($new !== '' || $confirm !== '') {
+            if (strlen($new) < 6)      $errors[] = 'La nuova password deve avere almeno 6 caratteri.';
+            if ($new !== $confirm)     $errors[] = 'Le due nuove password non coincidono.';
+            $newPassword = $new;
+        }
+
+        if ($errors) {
+            flash('error', implode(' ', $errors));
+            redirect('/admin/profile');
+        }
+
+        User::updateProfile($id, $name, $email, $newPassword);
+        // Aggiorna la sessione con i nuovi dati.
+        $_SESSION['user']['name']  = $name;
+        $_SESSION['user']['email'] = strtolower(trim($email));
+        flash('success', 'Profilo aggiornato' . ($newPassword ? ' e password modificata.' : '.'));
+        redirect('/admin/profile');
+    }
+
     /* =============================== Utenti =============================== */
 
     public static function users(): void

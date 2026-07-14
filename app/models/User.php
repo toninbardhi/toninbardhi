@@ -65,6 +65,21 @@ class User
         $st->execute([$id]);
     }
 
+    /** Aggiorna i dati del proprio profilo (senza toccare il ruolo). */
+    public static function updateProfile(int $id, string $name, string $email, ?string $password): void
+    {
+        if ($password !== null && $password !== '') {
+            $st = self::db()->prepare(
+                'UPDATE users SET name = ?, email = ?, password_hash = ? WHERE id = ?'
+            );
+            $st->execute([$name, strtolower(trim($email)),
+                password_hash($password, PASSWORD_DEFAULT), $id]);
+        } else {
+            $st = self::db()->prepare('UPDATE users SET name = ?, email = ? WHERE id = ?');
+            $st->execute([$name, strtolower(trim($email)), $id]);
+        }
+    }
+
     public static function verify(string $email, string $password): ?array
     {
         $user = self::findByEmail($email);

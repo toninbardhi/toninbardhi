@@ -23,10 +23,13 @@ return [
 
     // --- Sito ---
     'site' => [
-        'name'     => 'La mia Directory',
+        'name'     => 'Web Directory',
         // URL base dell'installazione. Lascia '' se il sito è nella
         // radice del dominio, altrimenti es. '/directory'
         'base_url' => '',
+        // URL assoluto del sito (usato per sitemap, canonical, Open Graph).
+        // Senza slash finale.
+        'url'      => 'https://webdirectory.link',
     ],
 
     // Numero di link per pagina nelle categorie e nella ricerca

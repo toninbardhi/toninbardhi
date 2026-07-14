@@ -34,15 +34,22 @@ class PublicController
         $links    = Link::approvedByCategory((int) $category['id'], $perPage, $offset);
         $crumbs   = Category::breadcrumb($category);
 
+        $trail = implode(' › ', array_map(fn($c) => $c['name'], $crumbs));
+        $meta = $category['description'] ?: sprintf(
+            'Siti della categoria %s: %d risorse selezionate nella directory.',
+            $trail, $total
+        );
+
         view('public/category', [
-            'title'      => $category['name'],
-            'category'   => $category,
-            'children'   => $children,
-            'links'      => $links,
-            'crumbs'     => $crumbs,
-            'page'       => $page,
-            'perPage'    => $perPage,
-            'total'      => $total,
+            'title'           => $category['name'],
+            'metaDescription' => $meta,
+            'category'        => $category,
+            'children'        => $children,
+            'links'           => $links,
+            'crumbs'          => $crumbs,
+            'page'            => $page,
+            'perPage'         => $perPage,
+            'total'           => $total,
         ]);
         return true;
     }
@@ -66,6 +73,31 @@ class PublicController
             'page'    => $page,
             'perPage' => $perPage,
         ]);
+    }
+
+    /** Sitemap XML con home, tutte le categorie e i link approvati. */
+    public static function sitemap(): void
+    {
+        header('Content-Type: application/xml; charset=utf-8');
+
+        echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+
+        $entry = static function (string $loc, ?string $lastmod = null, string $priority = '0.5'): void {
+            echo "  <url>\n    <loc>" . htmlspecialchars($loc, ENT_XML1) . "</loc>\n";
+            if ($lastmod) {
+                echo "    <lastmod>" . htmlspecialchars(substr($lastmod, 0, 10), ENT_XML1) . "</lastmod>\n";
+            }
+            echo "    <priority>{$priority}</priority>\n  </url>\n";
+        };
+
+        $entry(abs_url('/'), null, '1.0');
+
+        foreach (Category::all() as $c) {
+            $entry(abs_url($c['path']), $c['created_at'] ?? null, '0.7');
+        }
+
+        echo '</urlset>' . "\n";
     }
 
     public static function suggestForm(): void

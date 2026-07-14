@@ -20,8 +20,9 @@ img{max-width:100%}
 .container{max-width:960px; margin:0 auto; padding:0 16px}
 .site-header{background:var(--panel); border-bottom:1px solid var(--border)}
 .site-header .bar{display:flex; align-items:center; gap:16px; padding:14px 0; flex-wrap:wrap}
-.logo{font-size:1.35rem; font-weight:700; color:var(--ink)}
+.logo{font-size:1.35rem; font-weight:700; color:var(--ink); display:inline-flex; align-items:center; gap:9px}
 .logo:hover{text-decoration:none}
+.logo-icon{display:block; border-radius:6px}
 .site-header form.search{margin-left:auto; display:flex; gap:6px}
 .site-header input[type=search]{
   padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius);

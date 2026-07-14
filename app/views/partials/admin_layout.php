@@ -14,6 +14,8 @@ $badge = $pending_badge ?? 0;
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= e(($title ?? 'Admin') . ' · ' . $siteName) ?></title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="<?= e(url('assets/favicon.svg')) ?>">
   <link rel="stylesheet" href="<?= e(url('assets/css/style.css')) ?>">
 </head>
 <body>
@@ -30,6 +32,7 @@ $badge = $pending_badge ?? 0;
     <?php if (is_admin()): ?>
       <a class="<?= $nav('/admin/users') ?>" href="<?= e(url('/admin/users')) ?>">Utenti</a>
     <?php endif; ?>
+    <a class="<?= $nav('/admin/profile') ?>" href="<?= e(url('/admin/profile')) ?>">Il mio profilo</a>
     <a href="<?= e(url('/')) ?>">↗ Vedi il sito</a>
     <a href="<?= e(url('/logout')) ?>">Esci</a>
   </nav>

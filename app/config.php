@@ -14,8 +14,9 @@ return [
         'charset' => 'utf8mb4',
     ],
     'site' => [
-        'name'     => 'La mia Directory',
+        'name'     => 'Web Directory',
         'base_url' => '',
+        'url'      => getenv('SITE_URL') ?: 'https://webdirectory.link',
     ],
     'per_page' => 20,
 ];

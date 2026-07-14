@@ -13,7 +13,10 @@ su qualsiasi hosting condiviso (testato pensando a **Netsons**).
 - 📥 **Suggerisci un sito**: form pubblico che crea proposte da approvare
 - ✅ **Coda di moderazione** dei suggerimenti (approva / rifiuta)
 - 👥 **Utenti con ruoli**: `admin` (gestisce anche gli utenti) ed `editor`
+- 👤 **Profilo personale**: ogni utente cambia nome/email/password (con verifica della password attuale)
 - 🔐 Login sicuro, password con hash bcrypt, protezione CSRF, escaping output
+- 🔍 **SEO**: sitemap XML (`/sitemap.xml`), `robots.txt`, meta description, canonical, Open Graph
+- 🎨 Favicon e logo SVG inclusi
 
 ## Requisiti
 
@@ -36,6 +39,8 @@ su qualsiasi hosting condiviso (testato pensando a **Netsons**).
    - Copia `app/config.example.php` in `app/config.php`.
    - Inserisci i dati del database del punto 1.
    - Se il sito è nella radice del dominio lascia `base_url` a `''`.
+   - Imposta `url` sul dominio reale (es. `https://webdirectory.link`):
+     è usato per sitemap, canonical e Open Graph.
 
 4. **Carica i file**
    - Via FTP (o File Manager) copia **tutto il contenuto** del progetto dentro
