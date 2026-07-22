@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 190" role="img" aria-label="web directory">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 232" role="img" aria-label="webdirectory.link">
   <defs>
-    <filter id="logoShadow" x="-8%" y="-8%" width="116%" height="128%">
+    <filter id="logoShadow" x="-8%" y="-8%" width="116%" height="124%">
       <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#0d2531" flood-opacity="0.28"/>
     </filter>
   </defs>
@@ -16,5 +16,12 @@
     </text>
     <!-- "directory" in bianco -->
     <text x="230" y="166" font-size="62" text-anchor="middle" fill="#ffffff" stroke-width="10" letter-spacing="-1">directory</text>
+  </g>
+  <!-- ".link": la terza parola, come targhetta del dominio -->
+  <g>
+    <rect x="171" y="184" width="118" height="40" rx="14" fill="#0aa3dd" stroke="#173341" stroke-width="5"/>
+    <text x="230" y="213" text-anchor="middle" fill="#ffffff"
+          font-family="'Arial Rounded MT Bold','Nunito',system-ui,-apple-system,sans-serif"
+          font-weight="900" font-size="27" letter-spacing="0.5">.link</text>
   </g>
 </svg>

@@ -23,7 +23,7 @@ return [
 
     // --- Sito ---
     'site' => [
-        'name'     => 'Web Directory',
+        'name'     => 'webdirectory.link',
         // URL base dell'installazione. Lascia '' se il sito è nella
         // radice del dominio, altrimenti es. '/directory'
         'base_url' => '',

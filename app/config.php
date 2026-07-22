@@ -14,7 +14,7 @@ return [
         'charset' => 'utf8mb4',
     ],
     'site' => [
-        'name'     => 'Web Directory',
+        'name'     => 'webdirectory.link',
         'base_url' => '',
         'url'      => getenv('SITE_URL') ?: 'https://webdirectory.link',
     ],
