@@ -34,9 +34,8 @@ $adsOn = !empty($ads['client']);
 <body>
   <header class="site-header">
     <div class="container bar">
-      <a class="logo" href="<?= e(url('/')) ?>">
-        <img src="<?= e(url('assets/favicon.svg')) ?>" alt="" width="28" height="28" class="logo-icon">
-        <?= e($siteName) ?>
+      <a class="logo" href="<?= e(url('/')) ?>" aria-label="<?= e($siteName) ?>">
+        <img src="<?= e(url('assets/logo.svg')) ?>" alt="<?= e($siteName) ?>" class="logo-img">
       </a>
       <form class="search" action="<?= e(url('/search')) ?>" method="get" role="search">
         <input type="search" name="q" placeholder="Cerca nella directory…" value="<?= e($_GET['q'] ?? '') ?>">
