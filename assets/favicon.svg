@@ -1,10 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="web directory">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="webdirectory.link">
   <rect width="64" height="64" rx="14" fill="#173341"/>
   <text x="32" y="43" text-anchor="middle"
         font-family="'Arial Rounded MT Bold','Nunito',system-ui,-apple-system,sans-serif"
-        font-weight="900" font-size="40" fill="#ffffff">w</text>
-  <!-- barretta tricolore del brand -->
-  <rect x="15" y="49" width="10" height="7" rx="2.5" fill="#83bd22"/>
-  <rect x="27" y="49" width="10" height="7" rx="2.5" fill="#0aa3dd"/>
-  <rect x="39" y="49" width="10" height="7" rx="2.5" fill="#e5342b"/>
+        font-weight="900" font-size="29" letter-spacing="0.5"
+        paint-order="stroke" stroke="#0d2531" stroke-width="1.5" stroke-linejoin="round">
+    <tspan fill="#83bd22">w</tspan><tspan fill="#0aa3dd">d</tspan><tspan fill="#e5342b">l</tspan>
+  </text>
 </svg>
