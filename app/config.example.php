@@ -30,6 +30,10 @@ return [
         // URL assoluto del sito (usato per sitemap, canonical, Open Graph).
         // Senza slash finale.
         'url'      => 'https://webdirectory.link',
+        // Email di contatto mostrata nelle pagine Privacy/Contatti.
+        'email'    => 'info@webdirectory.link',
+        // Nome del titolare del trattamento (privacy). Compila col tuo nome.
+        'owner'    => '',
     ],
 
     // Numero di link per pagina nelle categorie e nella ricerca

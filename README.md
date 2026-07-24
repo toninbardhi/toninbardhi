@@ -20,7 +20,8 @@ su qualsiasi hosting condiviso (testato pensando a **Netsons**).
 - 🗺️ **Mappa OpenStreetMap** per i link con coordinate (iframe, nessuna API key, caricata solo al clic)
 - ✨ **Descrizione automatica dall'URL**: un clic legge titolo, descrizione e immagine dal sito (gratis); con una chiave Anthropic opzionale, Claude genera la descrizione quando manca (~0,002 € a sito)
 - 🛡️ **Antispam** sul form pubblico: honeypot + domanda matematica + controllo tempo (nessun servizio esterno, niente reCAPTCHA)
-- 💰 **Banner Google AdSense** opzionale in fondo alle pagine pubbliche
+- 💰 **Banner Google AdSense** opzionale, caricato **solo dopo il consenso** ai cookie
+- ⚖️ **Pagine Privacy / Cookie / Contatti** + **banner consenso cookie** (senza librerie esterne)
 - 👥 **Utenti con ruoli**: `admin` (gestisce anche gli utenti) ed `editor`
 - 👤 **Profilo personale**: ogni utente cambia nome/email/password (con verifica della password attuale)
 - 🔐 Login sicuro, password con hash bcrypt, protezione CSRF, escaping output
@@ -83,6 +84,21 @@ giorni mancanti alla scadenza e permette di rimuovere l'evidenza con un clic.
 **Aggiorni da una versione precedente?** Esegui la migrazione
 [`database/migrations/2026_07_add_featured.sql`](database/migrations/2026_07_add_featured.sql)
 da phpMyAdmin per aggiungere le colonne necessarie.
+
+## Privacy, cookie e consenso
+
+Il sito include le pagine **/privacy**, **/cookie**, **/contatti** (linkate nel
+footer) con testo base in italiano da personalizzare, e un **banner di consenso
+cookie** leggero (nessuna libreria esterna).
+
+- Compila `app/config.php → site.email` (contatto) e `site.owner` (titolare del
+  trattamento) per far apparire i tuoi dati nelle pagine.
+- Il banner compare **solo se AdSense è configurato**: gli annunci Google (e i
+  loro cookie) vengono caricati **unicamente dopo che l'utente preme "Accetta"**.
+  Se rifiuta, nessuno script Google viene caricato. La scelta è ricordata per 6 mesi
+  (cookie tecnico `wd_consent`); per cambiarla basta cancellare i cookie del sito.
+
+> Le pagine sono un modello di base: adattale alla tua situazione reale.
 
 ## Pubblicità (Google AdSense)
 

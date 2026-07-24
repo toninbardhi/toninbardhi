@@ -156,6 +156,22 @@ class PublicController
         ]);
     }
 
+    /** Pagine statiche: privacy, cookie, contatti. */
+    public static function page(string $name): void
+    {
+        $allowed = [
+            'privacy'  => 'Privacy',
+            'cookie'   => 'Cookie',
+            'contatti' => 'Contatti',
+        ];
+        if (!isset($allowed[$name])) {
+            http_response_code(404);
+            view('errors/404', ['title' => 'Pagina non trovata']);
+            return;
+        }
+        view('public/pages/' . $name, ['title' => $allowed[$name]]);
+    }
+
     public static function suggestForm(): void
     {
         view('public/suggest', [

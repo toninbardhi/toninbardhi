@@ -26,10 +26,7 @@ $adsOn = !empty($ads['client']);
   <meta property="og:url" content="<?= e($canonical) ?>">
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="<?= e(url('assets/css/style.css')) ?>">
-  <?php if ($adsOn): ?>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?= e($ads['client']) ?>"
-            crossorigin="anonymous"></script>
-  <?php endif; ?>
+  <?php /* AdSense viene caricato solo dopo il consenso (vedi banner cookie). */ ?>
 </head>
 <body>
   <header class="site-header">
@@ -68,7 +65,7 @@ $adsOn = !empty($ads['client']);
                <?php if (!empty($ads['slot'])): ?>data-ad-slot="<?= e($ads['slot']) ?>"<?php endif; ?>
                data-ad-format="auto"
                data-full-width-responsive="true"></ins>
-          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+          <?php /* Il push avviene solo dopo il consenso (script in fondo). */ ?>
         </div>
       </div>
     <?php endif; ?>
@@ -78,10 +75,59 @@ $adsOn = !empty($ads['client']);
     <div class="container">
       <a href="<?= e(url('/suggest')) ?>">Suggerisci un sito</a>
       &nbsp;·&nbsp;
+      <a href="<?= e(url('/privacy')) ?>">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="<?= e(url('/cookie')) ?>">Cookie</a>
+      &nbsp;·&nbsp;
+      <a href="<?= e(url('/contatti')) ?>">Contatti</a>
+      &nbsp;·&nbsp;
       <a href="<?= e(url('/admin')) ?>">Area riservata</a>
       <p>&copy; <?= date('Y') ?> <?= e($siteName) ?> — directory web in stile Open Directory.</p>
     </div>
   </footer>
+
+  <?php if ($adsOn): ?>
+    <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite" style="display:none">
+      <div class="cc-text">
+        Usiamo cookie tecnici e, con il tuo consenso, cookie di terze parti
+        (pubblicità Google) per sostenere il sito.
+        <a href="<?= e(url('/cookie')) ?>">Dettagli</a>.
+      </div>
+      <div class="cc-actions">
+        <button type="button" class="btn secondary small cc-deny">Rifiuta</button>
+        <button type="button" class="btn small cc-accept">Accetta</button>
+      </div>
+    </div>
+    <script>
+    (function () {
+      var CLIENT = <?= json_encode($ads['client']) ?>;
+      function consent() { var m = document.cookie.match(/(?:^|; )wd_consent=([^;]+)/); return m ? m[1] : null; }
+      function setConsent(v) { document.cookie = 'wd_consent=' + v + '; max-age=15552000; path=/; SameSite=Lax'; }
+      function loadAds() {
+        if (window.__adsLoaded || !CLIENT) return; window.__adsLoaded = true;
+        var s = document.createElement('script');
+        s.async = true; s.crossOrigin = 'anonymous';
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(CLIENT);
+        document.head.appendChild(s);
+        document.querySelectorAll('ins.adsbygoogle').forEach(function () {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        });
+      }
+      var c = consent();
+      if (c === 'accept') { loadAds(); return; }
+      if (c === 'deny') { return; }
+      var b = document.getElementById('cookie-banner');
+      if (!b) return;
+      b.style.display = 'block';
+      b.querySelector('.cc-accept').addEventListener('click', function () {
+        setConsent('accept'); b.style.display = 'none'; loadAds();
+      });
+      b.querySelector('.cc-deny').addEventListener('click', function () {
+        setConsent('deny'); b.style.display = 'none';
+      });
+    })();
+    </script>
+  <?php endif; ?>
 
   <script>
   // Mappa OpenStreetMap: carica l'iframe solo al primo clic (leggera).

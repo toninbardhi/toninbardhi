@@ -17,6 +17,8 @@ return [
         'name'     => 'webdirectory.link',
         'base_url' => '',
         'url'      => getenv('SITE_URL') ?: 'https://webdirectory.link',
+        'email'    => 'info@webdirectory.link',   // email di contatto (Privacy/Contatti)
+        'owner'    => '',                          // titolare del trattamento (tuo nome)
     ],
     'per_page' => 20,
 

@@ -77,6 +77,7 @@ $routes = [
     ['GET',  '#^/suggest$#',                 fn()      => PublicController::suggestForm()],
     ['POST', '#^/suggest$#',                 fn()      => PublicController::suggestSubmit()],
     ['GET',  '#^/fetch-description$#',        fn()      => PublicController::fetchDescription()],
+    ['GET',  '#^/(privacy|cookie|contatti)$#', fn($p)   => PublicController::page($p)],
 
     // Autenticazione
     ['GET',  '#^/login$#',                   fn()      => AuthController::loginForm()],
