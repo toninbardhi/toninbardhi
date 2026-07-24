@@ -59,7 +59,7 @@ su qualsiasi hosting condiviso (testato pensando a **Netsons**).
 
 5. **Primo accesso**
    - Vai su `https://iltuodominio.it/login`
-   - Utente: **admin@example.com** — Password: **admin123**
+   - Utente: **admin@webdirectory.link** — Password: **admin123**
    - ⚠️ **Cambia subito la password**: Utenti → modifica il tuo account.
 
 ## Posizionamento a pagamento (link in evidenza)

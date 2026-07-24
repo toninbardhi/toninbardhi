@@ -81,9 +81,10 @@ SET foreign_key_checks = 1;
 -- ------------------------------------------------------------
 
 -- Utente admin di default.
--- Password: admin123  (CAMBIALA dopo il primo accesso!)
+-- Accesso: admin@webdirectory.link  ·  Password: admin123
+-- CAMBIA email/nome/password dopo il primo accesso da "Il mio profilo".
 INSERT INTO `users` (`name`,`email`,`password_hash`,`role`) VALUES
-  ('Amministratore','admin@example.com',
+  ('Amministratore','admin@webdirectory.link',
    '$2y$12$mgJg4RkAWS1TsoaswMD.lu/ZVoQ2RnAMaUnqOWOSS1jE/UhLyWtK2','admin');
 
 -- ------------------------------------------------------------
