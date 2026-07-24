@@ -118,6 +118,14 @@ class PublicController
             return;
         }
 
+        // Throttle leggero: una richiesta ogni 2s per sessione (anti-abuso).
+        $now = time();
+        if (($_SESSION['last_fetch'] ?? 0) > $now - 2) {
+            echo json_encode(['ok' => false, 'error' => 'Troppe richieste, attendi un istante.']);
+            return;
+        }
+        $_SESSION['last_fetch'] = $now;
+
         $title = '';
         $description = '';
         $image = '';

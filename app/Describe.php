@@ -38,8 +38,9 @@ class Describe
         if (!self::safeUrl($url)) {
             return null;
         }
+        $protos = defined('CURLPROTO_HTTP') ? (CURLPROTO_HTTP | CURLPROTO_HTTPS) : null;
         $ch = curl_init($url);
-        curl_setopt_array($ch, [
+        $opts = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_MAXREDIRS      => 3,
@@ -53,9 +54,20 @@ class Describe
             CURLOPT_PROGRESSFUNCTION => function ($ch, $dltotal, $dlnow) {
                 return $dlnow > 400000 ? 1 : 0;
             },
-        ]);
+        ];
+        // Consenti solo http/https (blocca file://, gopher://, ecc.).
+        if ($protos !== null) {
+            $opts[CURLOPT_PROTOCOLS]       = $protos;
+            $opts[CURLOPT_REDIR_PROTOCOLS] = $protos;
+        }
+        curl_setopt_array($ch, $opts);
         $html = curl_exec($ch);
+        // Anti-SSRF via redirect: se l'URL finale punta a una rete privata, scarta.
+        $effective = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
         curl_close($ch);
+        if (is_string($effective) && $effective !== '' && !self::safeUrl($effective)) {
+            return null;
+        }
         return is_string($html) && $html !== '' ? $html : null;
     }
 

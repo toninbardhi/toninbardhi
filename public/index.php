@@ -6,6 +6,22 @@
 
 declare(strict_types=1);
 
+// In produzione non mostrare gli errori PHP all'utente (restano nei log).
+ini_set('display_errors', '0');
+
+// Intestazioni di sicurezza di base.
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
+// Cookie di sessione irrobustiti (HttpOnly, SameSite, Secure su HTTPS).
+$https = (($_SERVER['HTTPS'] ?? '') === 'on')
+      || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+session_set_cookie_params([
+    'httponly' => true,
+    'samesite' => 'Lax',
+    'secure'   => $https,
+]);
 session_start();
 
 define('APP_PATH', dirname(__DIR__) . '/app');
