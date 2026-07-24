@@ -16,6 +16,7 @@ su qualsiasi hosting condiviso (testato pensando a **Netsons**).
 - ⭐ **Posizionamento a pagamento**: metti un link "in evidenza" (badge
   *Sponsorizzato*) tra i primi 5 della categoria, con posizione e scadenza
   (precompilata a 1 anno); alla scadenza torna normale automaticamente
+- ✨ **Descrizione automatica dall'URL**: un clic legge titolo e descrizione dal sito (gratis); con una chiave Anthropic opzionale, Claude genera la descrizione quando manca (~0,002 € a sito)
 - 🛡️ **Antispam** sul form pubblico: honeypot + domanda matematica + controllo tempo (nessun servizio esterno, niente reCAPTCHA)
 - 💰 **Banner Google AdSense** opzionale in fondo alle pagine pubbliche
 - 👥 **Utenti con ruoli**: `admin` (gestisce anche gli utenti) ed `editor`
@@ -95,6 +96,32 @@ imposta i dati del tuo account AdSense:
 
 Lasciando `client` vuoto non viene caricato nulla (nessuno script esterno).
 L'area riservata non mostra mai pubblicità.
+
+## Descrizione automatica dall'URL
+
+Nei form "Nuovo link" (admin) e "Suggerisci un sito" c'è il pulsante
+**↓ Recupera dal sito**: inserisci l'URL, premilo e i campi titolo/descrizione
+si compilano da soli.
+
+- **Gratis**: legge il `<title>` e la meta description (o Open Graph) del sito.
+  Nessun costo, nessuna chiave. Attivo di default.
+- **AI (opzionale)**: se metti una chiave API Anthropic in
+  `app/config.php → describe`, quando il sito non fornisce una descrizione
+  Claude ne genera una in italiano. Costo con **Claude Haiku**: circa
+  **0,002 € a sito** (~2,5 € ogni 1000). L'AI si attiva solo per gli utenti
+  autenticati, così il form pubblico non genera costi.
+
+```php
+'describe' => [
+    'meta_enabled' => true,                 // lettura meta tag (gratis)
+    'ai_enabled'   => true,                 // abilita l'AI
+    'ai_api_key'   => 'sk-ant-...',         // la tua chiave Anthropic
+    'ai_model'     => 'claude-haiku-4-5',
+],
+```
+
+> 🔒 Il recupero è protetto contro gli abusi (SSRF): rifiuta indirizzi locali
+> o privati e scarica al massimo ~400 KB per pagina.
 
 ## Antispam
 

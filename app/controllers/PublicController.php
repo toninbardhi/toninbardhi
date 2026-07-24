@@ -100,6 +100,51 @@ class PublicController
         echo '</urlset>' . "\n";
     }
 
+    /**
+     * Endpoint JSON: dato un URL, restituisce titolo e descrizione.
+     * La lettura dei meta tag è gratuita; l'AI (se configurata) viene usata
+     * solo per gli utenti autenticati, per non esporre l'API a costi pubblici.
+     */
+    public static function fetchDescription(): void
+    {
+        global $CONFIG;
+        header('Content-Type: application/json; charset=utf-8');
+
+        $cfg = $CONFIG['describe'] ?? [];
+        $url = input('url');
+
+        if ($url === '' || !filter_var($url, FILTER_VALIDATE_URL) || !Describe::safeUrl($url)) {
+            echo json_encode(['ok' => false, 'error' => 'URL non valido o non consentito.']);
+            return;
+        }
+
+        $title = '';
+        $description = '';
+        if (!empty($cfg['meta_enabled'])) {
+            $meta = Describe::meta($url);
+            $title = $meta['title'];
+            $description = $meta['description'];
+        }
+
+        // AI solo se abilitata e richiedente autenticato (controllo costi).
+        $usedAi = false;
+        if (($description === '' || mb_strlen($description) < 40)
+            && is_logged_in() && !empty($cfg['ai_enabled'])) {
+            $ai = Describe::ai($cfg, $title !== '' ? $title : $url, $url, $description);
+            if ($ai !== '') {
+                $description = $ai;
+                $usedAi = true;
+            }
+        }
+
+        echo json_encode([
+            'ok'          => true,
+            'title'       => $title,
+            'description' => $description,
+            'used_ai'     => $usedAi,
+        ]);
+    }
+
     public static function suggestForm(): void
     {
         view('public/suggest', [

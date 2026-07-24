@@ -29,8 +29,12 @@ $featUntil  = $link['featured_until'] ?? date('Y-m-d', strtotime('+1 year'));
     </div>
     <div class="field">
       <label for="url">URL *</label>
-      <input type="url" name="url" id="url" required placeholder="https://esempio.it"
-             value="<?= e($link['url'] ?? input('url')) ?>">
+      <div style="display:flex; gap:8px">
+        <input type="url" name="url" id="url" required placeholder="https://esempio.it" style="flex:1"
+               value="<?= e($link['url'] ?? input('url')) ?>">
+        <button type="button" class="btn secondary" id="fetch-desc">↓ Recupera dal sito</button>
+      </div>
+      <div class="hint" id="fetch-msg"></div>
     </div>
     <div class="field">
       <label for="description">Descrizione</label>
@@ -83,3 +87,4 @@ $featUntil  = $link['featured_until'] ?? date('Y-m-d', strtotime('+1 year'));
     sync();
   })();
 </script>
+<?php require APP_PATH . '/views/partials/fetch_desc.php'; ?>

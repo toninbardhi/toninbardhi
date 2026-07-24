@@ -44,7 +44,11 @@ $old = $old ?? [];
     </div>
     <div class="field">
       <label for="url">URL *</label>
-      <input type="url" name="url" id="url" placeholder="https://esempio.it" required value="<?= e($old['url'] ?? '') ?>">
+      <div style="display:flex; gap:8px">
+        <input type="url" name="url" id="url" placeholder="https://esempio.it" required style="flex:1" value="<?= e($old['url'] ?? '') ?>">
+        <button type="button" class="btn secondary" id="fetch-desc">↓ Compila dal sito</button>
+      </div>
+      <div class="hint" id="fetch-msg"></div>
     </div>
     <div class="field">
       <label for="description">Descrizione</label>
@@ -77,3 +81,4 @@ $old = $old ?? [];
     </div>
   </form>
 </div>
+<?php require APP_PATH . '/views/partials/fetch_desc.php'; ?>

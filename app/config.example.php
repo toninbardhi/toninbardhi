@@ -47,4 +47,18 @@ return [
         'enabled'  => true,        // honeypot + domanda matematica + controllo tempo
         'min_secs' => 3,           // invio più rapido di così = probabile bot
     ],
+
+    // --- Descrizione automatica dal sito ---
+    // Inserisci l'URL e recupera titolo/descrizione con un clic.
+    'describe' => [
+        // GRATIS: legge <title> e la meta description del sito. Nessun costo.
+        'meta_enabled' => true,
+
+        // OPZIONALE (a pagamento, ma pochissimo ~0,002 € a sito con Haiku):
+        // se metti una chiave API Anthropic, l'AI genera una descrizione
+        // in italiano quando quella del sito manca o è troppo scarna.
+        'ai_enabled'   => false,
+        'ai_api_key'   => '',                 // es. 'sk-ant-...'
+        'ai_model'     => 'claude-haiku-4-5', // il modello più economico
+    ],
 ];

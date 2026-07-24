@@ -29,4 +29,12 @@ return [
         'enabled'  => true,
         'min_secs' => 3,
     ],
+
+    // Descrizione automatica dal sito (meta tag = gratis; AI = opzionale)
+    'describe' => [
+        'meta_enabled' => true,                          // legge titolo/descrizione dal sito
+        'ai_enabled'   => (bool) (getenv('ANTHROPIC_API_KEY')), // richiede una chiave
+        'ai_api_key'   => getenv('ANTHROPIC_API_KEY') ?: '',
+        'ai_model'     => 'claude-haiku-4-5',            // il più economico
+    ],
 ];

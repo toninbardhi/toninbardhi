@@ -22,6 +22,7 @@ $CONFIG = require $configFile;
 // --- Bootstrap ---
 require APP_PATH . '/Database.php';
 require APP_PATH . '/helpers.php';
+require APP_PATH . '/Describe.php';
 require APP_PATH . '/models/Category.php';
 require APP_PATH . '/models/Link.php';
 require APP_PATH . '/models/User.php';
@@ -59,6 +60,7 @@ $routes = [
     ['GET',  '#^/sitemap\.xml$#',            fn()      => PublicController::sitemap()],
     ['GET',  '#^/suggest$#',                 fn()      => PublicController::suggestForm()],
     ['POST', '#^/suggest$#',                 fn()      => PublicController::suggestSubmit()],
+    ['GET',  '#^/fetch-description$#',        fn()      => PublicController::fetchDescription()],
 
     // Autenticazione
     ['GET',  '#^/login$#',                   fn()      => AuthController::loginForm()],
