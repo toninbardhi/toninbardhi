@@ -65,7 +65,7 @@ class Describe
      */
     public static function meta(string $url): array
     {
-        $out = ['title' => '', 'description' => ''];
+        $out = ['title' => '', 'description' => '', 'image' => ''];
         $html = self::fetch($url);
         if ($html === null) {
             return $out;
@@ -90,8 +90,24 @@ class Describe
             '//meta[@name="twitter:description"]/@content',
         ]);
 
+        // Immagine di anteprima (og:image / twitter:image).
+        $image = self::firstContent($xp, [
+            '//meta[@property="og:image"]/@content',
+            '//meta[@name="twitter:image"]/@content',
+            '//meta[@property="og:image:url"]/@content',
+        ]);
+        // Risolvi eventuali URL relativi rispetto alla pagina.
+        if ($image !== '' && !preg_match('#^https?://#i', $image)) {
+            $base = parse_url($url);
+            if (!empty($base['scheme']) && !empty($base['host'])) {
+                $root = $base['scheme'] . '://' . $base['host'];
+                $image = $image[0] === '/' ? $root . $image : $root . '/' . ltrim($image, '/');
+            }
+        }
+
         $out['title'] = self::clean($title, 200);
         $out['description'] = self::clean($desc, 1000);
+        $out['image'] = filter_var($image, FILTER_VALIDATE_URL) ? $image : '';
         return $out;
     }
 

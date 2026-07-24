@@ -194,6 +194,48 @@ function antispam_errors(array $cfg): array
 }
 
 /* ------------------------------------------------------------------ *
+ *  Anteprime (thumbnail) e mappe
+ * ------------------------------------------------------------------ */
+
+/**
+ * URL dell'anteprima per un link: usa image_url se presente,
+ * altrimenti la favicon del dominio (servizio gratuito DuckDuckGo).
+ */
+function thumb_url(array $link): string
+{
+    if (!empty($link['image_url'])) {
+        return $link['image_url'];
+    }
+    $host = parse_url($link['url'] ?? '', PHP_URL_HOST);
+    if (!$host) {
+        return '';
+    }
+    return 'https://icons.duckduckgo.com/ip3/' . rawurlencode($host) . '.ico';
+}
+
+/** true se il link ha coordinate valide per la mappa. */
+function has_map(array $link): bool
+{
+    return isset($link['latitude'], $link['longitude'])
+        && $link['latitude'] !== null && $link['longitude'] !== null
+        && is_numeric($link['latitude']) && is_numeric($link['longitude']);
+}
+
+/** URL dell'iframe OpenStreetMap centrato sulle coordinate. */
+function osm_embed_url(float $lat, float $lng, float $delta = 0.01): string
+{
+    $bbox = sprintf('%F,%F,%F,%F', $lng - $delta, $lat - $delta, $lng + $delta, $lat + $delta);
+    return 'https://www.openstreetmap.org/export/embed.html?bbox=' . rawurlencode($bbox)
+         . '&layer=mapnik&marker=' . rawurlencode(sprintf('%F,%F', $lat, $lng));
+}
+
+/** URL della mappa OpenStreetMap a schermo intero. */
+function osm_full_url(float $lat, float $lng): string
+{
+    return sprintf('https://www.openstreetmap.org/?mlat=%F&mlon=%F#map=16/%F/%F', $lat, $lng, $lat, $lng);
+}
+
+/* ------------------------------------------------------------------ *
  *  Rendering delle view
  * ------------------------------------------------------------------ */
 

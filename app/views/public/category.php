@@ -47,18 +47,8 @@ $totalPages = (int) ceil($total / $perPage);
       <a href="<?= e(url('/suggest')) ?>">Suggeriscine uno</a>.</p>
   <?php else: ?>
     <ul class="link-list">
-      <?php foreach ($links as $l): ?>
-        <?php $feat = !empty($l['featured']); ?>
-        <li class="<?= $feat ? 'is-featured' : '' ?>">
-          <div class="title">
-            <a href="<?= e($l['url']) ?>" target="_blank" rel="nofollow noopener sponsored"><?= e($l['title']) ?></a>
-            <?php if ($feat): ?><span class="badge featured">Sponsorizzato</span><?php endif; ?>
-          </div>
-          <div class="url"><?= e($l['url']) ?></div>
-          <?php if (!empty($l['description'])): ?>
-            <div class="desc"><?= e($l['description']) ?></div>
-          <?php endif; ?>
-        </li>
+      <?php $showCategory = false; foreach ($links as $l): ?>
+        <?php require APP_PATH . '/views/partials/link_item.php'; ?>
       <?php endforeach; ?>
     </ul>
 

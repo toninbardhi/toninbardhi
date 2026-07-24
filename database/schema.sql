@@ -59,6 +59,10 @@ CREATE TABLE `links` (
   `featured`         TINYINT(1) NOT NULL DEFAULT 0,   -- 1 = in evidenza (a pagamento)
   `featured_position` INT NOT NULL DEFAULT 0,         -- ordine tra gli sponsor (1 = primo)
   `featured_until`   DATE NULL,                       -- scadenza del posizionamento
+  `image_url`    VARCHAR(2048) NULL,                  -- anteprima/thumbnail (og:image)
+  `latitude`     DECIMAL(10,7) NULL,                  -- posizione (mappa OpenStreetMap)
+  `longitude`    DECIMAL(10,7) NULL,
+  `address`      VARCHAR(255) NULL,                   -- indirizzo mostrato sotto la mappa
   `sort_order`   INT NOT NULL DEFAULT 0,
   `created_at`   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

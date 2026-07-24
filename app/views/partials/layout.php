@@ -82,5 +82,29 @@ $adsOn = !empty($ads['client']);
       <p>&copy; <?= date('Y') ?> <?= e($siteName) ?> — directory web in stile Open Directory.</p>
     </div>
   </footer>
+
+  <script>
+  // Mappa OpenStreetMap: carica l'iframe solo al primo clic (leggera).
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest('.map-toggle');
+    if (!btn) return;
+    var holder = btn.parentNode.querySelector('.map-holder');
+    if (!holder) return;
+    if (holder.dataset.loaded) {
+      var open = holder.style.display !== 'none';
+      holder.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? '📍 Mostra mappa' : '📍 Nascondi mappa';
+      return;
+    }
+    var f = document.createElement('iframe');
+    f.src = btn.dataset.embed;
+    f.loading = 'lazy';
+    f.title = 'Mappa OpenStreetMap';
+    holder.appendChild(f);
+    holder.dataset.loaded = '1';
+    holder.style.display = 'block';
+    btn.textContent = '📍 Nascondi mappa';
+  });
+  </script>
 </body>
 </html>

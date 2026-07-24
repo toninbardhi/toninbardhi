@@ -20,8 +20,10 @@
         if (!d.ok) { msg.textContent = d.error || 'Impossibile recuperare i dati.'; return; }
         var t = document.getElementById('title');
         var desc = document.getElementById('description');
+        var img = document.getElementById('image_url');
         if (t && d.title && !t.value) t.value = d.title;
         if (desc && d.description && !desc.value) desc.value = d.description;
+        if (img && d.image && !img.value) { img.value = d.image; if (window.__thumbPreview) window.__thumbPreview(); }
         msg.textContent = d.description
           ? (d.used_ai ? 'Descrizione generata con AI ✓' : 'Recuperato dal sito ✓')
           : 'Il sito non fornisce una descrizione: scrivila a mano.';

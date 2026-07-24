@@ -16,7 +16,9 @@ su qualsiasi hosting condiviso (testato pensando a **Netsons**).
 - ⭐ **Posizionamento a pagamento**: metti un link "in evidenza" (badge
   *Sponsorizzato*) tra i primi 5 della categoria, con posizione e scadenza
   (precompilata a 1 anno); alla scadenza torna normale automaticamente
-- ✨ **Descrizione automatica dall'URL**: un clic legge titolo e descrizione dal sito (gratis); con una chiave Anthropic opzionale, Claude genera la descrizione quando manca (~0,002 € a sito)
+- 🖼️ **Anteprime (thumbnail)**: immagine `og:image` del sito (recuperata in automatico) o favicon come ripiego
+- 🗺️ **Mappa OpenStreetMap** per i link con coordinate (iframe, nessuna API key, caricata solo al clic)
+- ✨ **Descrizione automatica dall'URL**: un clic legge titolo, descrizione e immagine dal sito (gratis); con una chiave Anthropic opzionale, Claude genera la descrizione quando manca (~0,002 € a sito)
 - 🛡️ **Antispam** sul form pubblico: honeypot + domanda matematica + controllo tempo (nessun servizio esterno, niente reCAPTCHA)
 - 💰 **Banner Google AdSense** opzionale in fondo alle pagine pubbliche
 - 👥 **Utenti con ruoli**: `admin` (gestisce anche gli utenti) ed `editor`
@@ -96,6 +98,22 @@ imposta i dati del tuo account AdSense:
 
 Lasciando `client` vuoto non viene caricato nulla (nessuno script esterno).
 L'area riservata non mostra mai pubblicità.
+
+## Anteprime e mappe (novità che DMOZ non aveva)
+
+Nel form **Nuovo link** (admin), oltre a titolo/descrizione:
+
+- **Anteprima**: campo *Immagine di anteprima*. Si compila da solo con
+  "Recupera dal sito" (usa l'`og:image`); se lo lasci vuoto, in elenco viene
+  mostrata la **favicon** del sito. L'anteprima appare accanto a ogni link.
+- **Mappa OpenStreetMap**: inserisci **latitudine** e **longitudine** (e un
+  indirizzo facoltativo). Se presenti, nell'elenco compare il pulsante
+  **📍 Mostra mappa** che apre una mappa OSM incorporata — **senza API key** e
+  caricata solo al clic (nessun peso sulla pagina). Le coordinate si trovano su
+  openstreetmap.org (tasto destro → *Mostra indirizzo*).
+
+> Aggiorni da una versione precedente? Esegui
+> `database/migrations/2026_07_add_thumbnail_map.sql`.
 
 ## Descrizione automatica dall'URL
 

@@ -120,10 +120,12 @@ class PublicController
 
         $title = '';
         $description = '';
+        $image = '';
         if (!empty($cfg['meta_enabled'])) {
             $meta = Describe::meta($url);
             $title = $meta['title'];
             $description = $meta['description'];
+            $image = $meta['image'];
         }
 
         // AI solo se abilitata e richiedente autenticato (controllo costi).
@@ -141,6 +143,7 @@ class PublicController
             'ok'          => true,
             'title'       => $title,
             'description' => $description,
+            'image'       => $image,
             'used_ai'     => $usedAi,
         ]);
     }

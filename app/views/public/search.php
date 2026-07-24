@@ -19,19 +19,8 @@ $totalPages = (int) ceil($total / $perPage);
 <?php else: ?>
   <p class="muted"><?= $total ?> risultat<?= $total === 1 ? 'o' : 'i' ?> per «<?= e($q) ?>»</p>
   <ul class="link-list">
-    <?php foreach ($results as $l): ?>
-      <?php $feat = !empty($l['featured']); ?>
-      <li class="<?= $feat ? 'is-featured' : '' ?>">
-        <div class="title">
-          <a href="<?= e($l['url']) ?>" target="_blank" rel="nofollow noopener sponsored"><?= e($l['title']) ?></a>
-          <?php if ($feat): ?><span class="badge featured">Sponsorizzato</span><?php endif; ?>
-        </div>
-        <div class="url"><?= e($l['url']) ?></div>
-        <?php if (!empty($l['description'])): ?>
-          <div class="desc"><?= e($l['description']) ?></div>
-        <?php endif; ?>
-        <div class="cat">in <a href="<?= e(url($l['category_path'])) ?>"><?= e($l['category_name']) ?></a></div>
-      </li>
+    <?php $showCategory = true; foreach ($results as $l): ?>
+      <?php require APP_PATH . '/views/partials/link_item.php'; ?>
     <?php endforeach; ?>
   </ul>
 

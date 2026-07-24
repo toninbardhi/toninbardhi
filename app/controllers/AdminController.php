@@ -370,10 +370,32 @@ class AdminController
         $position = (int) input('featured_position');
         $until    = input('featured_until');
 
+        // Anteprima e mappa.
+        $imageUrl = input('image_url');
+        $address  = input('address');
+        $latRaw   = input('latitude');
+        $lngRaw   = input('longitude');
+
         $errors = [];
         if ($title === '')                          $errors[] = 'Il titolo è obbligatorio.';
         if (!filter_var($url, FILTER_VALIDATE_URL)) $errors[] = 'URL non valido.';
         if (!Category::find($categoryId))           $errors[] = 'Categoria non valida.';
+        if ($imageUrl !== '' && !filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+            $errors[] = 'URL dell\'immagine non valido.';
+        }
+
+        // Coordinate: entrambe o nessuna, con range valido.
+        $lat = $lng = null;
+        if ($latRaw !== '' || $lngRaw !== '') {
+            if (!is_numeric($latRaw) || !is_numeric($lngRaw)) {
+                $errors[] = 'Latitudine e longitudine devono essere numeri.';
+            } elseif ($latRaw < -90 || $latRaw > 90 || $lngRaw < -180 || $lngRaw > 180) {
+                $errors[] = 'Coordinate fuori intervallo (lat -90..90, lng -180..180).';
+            } else {
+                $lat = round((float) $latRaw, 7);
+                $lng = round((float) $lngRaw, 7);
+            }
+        }
 
         if ($featured) {
             if ($position < 1 || $position > Link::FEATURED_SLOTS) {
@@ -399,6 +421,10 @@ class AdminController
             'featured'          => $featured ? 1 : 0,
             'featured_position' => $position,
             'featured_until'    => $until,
+            'image_url'         => $imageUrl !== '' ? $imageUrl : null,
+            'latitude'          => $lat,
+            'longitude'         => $lng,
+            'address'           => $address !== '' ? $address : null,
         ], $errors];
     }
 

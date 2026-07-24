@@ -155,10 +155,12 @@ class Link
         $st = self::db()->prepare(
             'INSERT INTO links
                 (category_id, title, url, description, status, submitted_by,
-                 featured, featured_position, featured_until)
+                 featured, featured_position, featured_until,
+                 image_url, latitude, longitude, address)
              VALUES
                 (:category_id, :title, :url, :description, :status, :submitted_by,
-                 :featured, :featured_position, :featured_until)'
+                 :featured, :featured_position, :featured_until,
+                 :image_url, :latitude, :longitude, :address)'
         );
         $st->execute([
             ':category_id'       => $d['category_id'],
@@ -170,6 +172,10 @@ class Link
             ':featured'          => !empty($d['featured']) ? 1 : 0,
             ':featured_position' => (int) ($d['featured_position'] ?? 0),
             ':featured_until'    => $d['featured_until'] ?? null,
+            ':image_url'         => $d['image_url'] ?? null,
+            ':latitude'          => $d['latitude'] ?? null,
+            ':longitude'         => $d['longitude'] ?? null,
+            ':address'           => $d['address'] ?? null,
         ]);
         return (int) self::db()->lastInsertId();
     }
@@ -180,7 +186,9 @@ class Link
             'UPDATE links SET category_id = :category_id, title = :title, url = :url,
                     description = :description, status = :status,
                     featured = :featured, featured_position = :featured_position,
-                    featured_until = :featured_until
+                    featured_until = :featured_until,
+                    image_url = :image_url, latitude = :latitude,
+                    longitude = :longitude, address = :address
              WHERE id = :id'
         );
         $st->execute([
@@ -192,6 +200,10 @@ class Link
             ':featured'          => !empty($d['featured']) ? 1 : 0,
             ':featured_position' => (int) ($d['featured_position'] ?? 0),
             ':featured_until'    => $d['featured_until'] ?? null,
+            ':image_url'         => $d['image_url'] ?? null,
+            ':latitude'          => $d['latitude'] ?? null,
+            ':longitude'         => $d['longitude'] ?? null,
+            ':address'           => $d['address'] ?? null,
             ':id'                => $id,
         ]);
     }
