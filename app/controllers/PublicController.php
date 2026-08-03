@@ -103,6 +103,12 @@ class PublicController
             $entry(abs_url('/blog/' . $p['slug']), $p['published_at'] ?? $p['created_at'] ?? null, '0.6');
         }
 
+        // Schede Spotlight pubblicate.
+        $entry(abs_url('/spotlight'), null, '0.6');
+        foreach (Spotlight::published(1000, 0) as $s) {
+            $entry(abs_url('/spotlight/' . $s['slug']), $s['published_at'] ?? $s['created_at'] ?? null, '0.6');
+        }
+
         echo '</urlset>' . "\n";
     }
 
@@ -197,6 +203,44 @@ class PublicController
             'metaDescription' => $post['excerpt'] ?: null,
             'metaImage'       => $post['cover_image'] ?: null,
             'post'            => $post,
+        ]);
+    }
+
+    /** Elenco delle schede Spotlight (con eventuale filtro categoria). */
+    public static function spotlights(): void
+    {
+        global $CONFIG;
+        $perPage = (int) ($CONFIG['per_page'] ?? 20);
+        $page = max(1, (int) input('page', '1'));
+        $offset = ($page - 1) * $perPage;
+        $catId = (int) input('category_id');
+        $catId = $catId > 0 ? $catId : null;
+
+        view('public/spotlights', [
+            'title'      => 'Spotlight',
+            'items'      => Spotlight::published($perPage, $offset, $catId),
+            'total'      => Spotlight::publishedCount($catId),
+            'page'       => $page,
+            'perPage'    => $perPage,
+            'categoryId' => $catId,
+            'categories' => Category::all(),
+        ]);
+    }
+
+    /** Singola scheda Spotlight. */
+    public static function spotlight(string $slug): void
+    {
+        $item = Spotlight::findBySlug($slug);
+        if (!$item || $item['status'] !== 'published') {
+            http_response_code(404);
+            view('errors/404', ['title' => 'Scheda non trovata']);
+            return;
+        }
+        view('public/spotlight', [
+            'title'           => $item['title'],
+            'metaDescription' => $item['subject_name'] . ' — presentazione, come lo vede il web e l\'AI.',
+            'metaImage'       => $item['cover_image'] ?: null,
+            'item'            => $item,
         ]);
     }
 

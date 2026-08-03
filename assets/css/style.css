@@ -63,6 +63,18 @@ img{max-width:100%}
 .sponsor-cta{background:#f5f9ff; border-color:#d3e2fb}
 .sponsor-cta .sponsor-price{font-size:1.05rem; margin:0 0 10px}
 
+/* Spotlight: sezioni presentazione / web / AI */
+.sl-section{margin:20px 0; padding:16px 18px; border:1px solid var(--border); border-radius:var(--radius); background:#fff}
+.sl-section h2{margin:0 0 8px; font-size:1.15rem}
+.sl-web{background:#f5f9ff; border-color:#d3e2fb}
+.sl-ai{background:#f6f5ff; border-color:#ddd6fe}
+.spotlight-single .subject-link{word-break:break-all}
+
+/* Blocco "genera con AI" nel form admin */
+.ai-gen{background:#f6f5ff; border:1px solid #ddd6fe; border-radius:var(--radius);
+  padding:12px 14px; margin-bottom:18px}
+.ai-gen #ai-status{margin-left:10px; font-size:.88rem}
+
 /* Blog: corpo articolo */
 .post-body{line-height:1.7}
 .post-body p{margin:0 0 14px}

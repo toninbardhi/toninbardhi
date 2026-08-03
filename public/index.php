@@ -44,6 +44,7 @@ require APP_PATH . '/models/Link.php';
 require APP_PATH . '/models/User.php';
 require APP_PATH . '/models/Setting.php';
 require APP_PATH . '/models/Post.php';
+require APP_PATH . '/models/Spotlight.php';
 require APP_PATH . '/controllers/PublicController.php';
 require APP_PATH . '/controllers/AuthController.php';
 require APP_PATH . '/controllers/AdminController.php';
@@ -82,6 +83,8 @@ $routes = [
     ['GET',  '#^/(privacy|cookie|contatti)$#', fn($p)   => PublicController::page($p)],
     ['GET',  '#^/blog$#',                     fn()      => PublicController::blog()],
     ['GET',  '#^/blog/([a-z0-9-]+)$#',        fn($s)    => PublicController::post($s)],
+    ['GET',  '#^/spotlight$#',                fn()      => PublicController::spotlights()],
+    ['GET',  '#^/spotlight/([a-z0-9-]+)$#',   fn($s)    => PublicController::spotlight($s)],
 
     // Autenticazione
     ['GET',  '#^/login$#',                   fn()      => AuthController::loginForm()],
@@ -102,6 +105,14 @@ $routes = [
     ['GET',  '#^/admin/posts/(\d+)/edit$#',  fn($id)   => AdminController::postForm((int)$id)],
     ['POST', '#^/admin/posts/(\d+)/edit$#',  fn($id)   => AdminController::postUpdate((int)$id)],
     ['POST', '#^/admin/posts/(\d+)/delete$#',fn($id)   => AdminController::postDelete((int)$id)],
+
+    ['GET',  '#^/admin/spotlight$#',          fn()      => AdminController::spotlights()],
+    ['GET',  '#^/admin/spotlight/create$#',   fn()      => AdminController::spotlightForm()],
+    ['POST', '#^/admin/spotlight/create$#',   fn()      => AdminController::spotlightStore()],
+    ['POST', '#^/admin/spotlight/generate$#', fn()      => AdminController::spotlightGenerate()],
+    ['GET',  '#^/admin/spotlight/(\d+)/edit$#',  fn($id)=> AdminController::spotlightForm((int)$id)],
+    ['POST', '#^/admin/spotlight/(\d+)/edit$#',  fn($id)=> AdminController::spotlightUpdate((int)$id)],
+    ['POST', '#^/admin/spotlight/(\d+)/delete$#',fn($id)=> AdminController::spotlightDelete((int)$id)],
 
     ['GET',  '#^/admin/categories$#',        fn()      => AdminController::categories()],
     ['GET',  '#^/admin/categories/create$#', fn()      => AdminController::categoryForm()],

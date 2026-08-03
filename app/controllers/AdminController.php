@@ -441,6 +441,171 @@ class AdminController
         redirect('/admin/posts');
     }
 
+    /* =============================== Spotlight =============================== */
+
+    public static function spotlights(): void
+    {
+        require_login();
+        self::render('admin/spotlights', ['title' => 'Spotlight', 'items' => Spotlight::all()]);
+    }
+
+    public static function spotlightForm(?int $id = null): void
+    {
+        require_login();
+        $item = $id ? Spotlight::find($id) : null;
+        if ($id && !$item) {
+            self::notFound();
+        }
+        self::render('admin/spotlight_form', [
+            'title'      => $id ? 'Modifica scheda' : 'Nuova scheda',
+            'item'       => $item,
+            'categories' => Category::all(),
+        ]);
+    }
+
+    public static function spotlightStore(): void
+    {
+        require_login();
+        csrf_check();
+        [$data, $errors] = self::validateSpotlight();
+        if ($errors) {
+            flash('error', implode(' ', $errors));
+            redirect('/admin/spotlight/create');
+        }
+        $data['slug'] = Spotlight::uniqueSlug($data['slug'] !== '' ? $data['slug'] : $data['title']);
+        $data['author'] = current_user()['name'] ?? null;
+        Spotlight::create($data);
+        flash('success', 'Scheda creata.');
+        redirect('/admin/spotlight');
+    }
+
+    public static function spotlightUpdate(int $id): void
+    {
+        require_login();
+        csrf_check();
+        if (!Spotlight::find($id)) {
+            self::notFound();
+        }
+        [$data, $errors] = self::validateSpotlight();
+        if ($errors) {
+            flash('error', implode(' ', $errors));
+            redirect("/admin/spotlight/$id/edit");
+        }
+        $data['slug'] = Spotlight::uniqueSlug($data['slug'] !== '' ? $data['slug'] : $data['title'], $id);
+        Spotlight::update($id, $data);
+        flash('success', 'Scheda aggiornata.');
+        redirect('/admin/spotlight');
+    }
+
+    public static function spotlightDelete(int $id): void
+    {
+        require_login();
+        csrf_check();
+        Spotlight::delete($id);
+        flash('success', 'Scheda eliminata.');
+        redirect('/admin/spotlight');
+    }
+
+    /**
+     * Endpoint JSON: genera una bozza di scheda con l'AI a partire da
+     * nome + URL. Solo per utenti autenticati (controllo costi).
+     */
+    public static function spotlightGenerate(): void
+    {
+        require_login();
+        global $CONFIG;
+        header('Content-Type: application/json; charset=utf-8');
+
+        $cfg  = $CONFIG['describe'] ?? [];
+        $name = input('subject_name');
+        $url  = input('subject_url');
+
+        if ($name === '' && $url === '') {
+            echo json_encode(['ok' => false, 'error' => 'Inserisci almeno il nome o l\'URL.']);
+            return;
+        }
+
+        // Meta dal sito (gratis), se l'URL è valido.
+        $hint = '';
+        if ($url !== '' && filter_var($url, FILTER_VALIDATE_URL) && Describe::safeUrl($url)) {
+            $meta = Describe::meta($url);
+            if ($name === '' && $meta['title'] !== '') {
+                $name = $meta['title'];
+            }
+            $hint = trim($meta['title'] . '. ' . $meta['description']);
+        }
+
+        if (empty($cfg['ai_enabled'])) {
+            echo json_encode(['ok' => false, 'error' => 'La generazione AI non è configurata (app/config.php → describe).']);
+            return;
+        }
+
+        $draft = Describe::spotlight($cfg, $name !== '' ? $name : $url, $url, $hint);
+        if (!$draft) {
+            echo json_encode(['ok' => false, 'error' => 'Generazione non riuscita. Riprova o compila a mano.']);
+            return;
+        }
+        echo json_encode(['ok' => true, 'subject_name' => $name] + $draft);
+    }
+
+    /** Valida una scheda Spotlight. Ritorna [dati, errori]. */
+    private static function validateSpotlight(): array
+    {
+        $title   = input('title');
+        $subject = input('subject_name');
+        $url     = input('subject_url');
+        $catId   = self::nullableInt('category_id');
+        $cover   = input('cover_image');
+        // Contenuti HTML da autore fidato (admin/editor).
+        $pres = trim((string) ($_POST['presentation'] ?? ''));
+        $web  = trim((string) ($_POST['web_view'] ?? ''));
+        $ai   = trim((string) ($_POST['ai_view'] ?? ''));
+
+        $aiGenerated = input('ai_generated') === '1';
+        $isPaid      = input('is_paid') === '1';
+        $sponsorName = input('sponsor_name');
+        $status      = input('status') === 'published' ? 'published' : 'draft';
+
+        $errors = [];
+        if ($title === '')   $errors[] = 'Il titolo è obbligatorio.';
+        if ($subject === '') $errors[] = 'Il nome del prodotto/sito è obbligatorio.';
+        if ($url !== '' && !filter_var($url, FILTER_VALIDATE_URL)) {
+            $errors[] = 'L\'URL del soggetto non è valido.';
+        }
+        if ($cover !== '' && !filter_var($cover, FILTER_VALIDATE_URL)) {
+            $errors[] = 'L\'URL dell\'immagine di copertina non è valido.';
+        }
+        if ($catId !== null && !Category::find($catId)) {
+            $errors[] = 'Categoria non valida.';
+            $catId = null;
+        }
+
+        $published = null;
+        if ($status === 'published') {
+            $when = input('published_at');
+            $published = ($when !== '' && strtotime($when))
+                ? date('Y-m-d H:i:s', strtotime($when))
+                : date('Y-m-d H:i:s');
+        }
+
+        return [[
+            'title'        => $title,
+            'slug'         => input('slug'),
+            'subject_name' => $subject,
+            'subject_url'  => $url !== '' ? $url : null,
+            'category_id'  => $catId,
+            'presentation' => $pres !== '' ? $pres : null,
+            'web_view'     => $web !== '' ? $web : null,
+            'ai_view'      => $ai !== '' ? $ai : null,
+            'cover_image'  => $cover !== '' ? $cover : null,
+            'ai_generated' => $aiGenerated ? 1 : 0,
+            'is_paid'      => $isPaid ? 1 : 0,
+            'sponsor_name' => ($isPaid && $sponsorName !== '') ? $sponsorName : null,
+            'status'       => $status,
+            'published_at' => $published,
+        ], $errors];
+    }
+
     /** Valida un articolo. Ritorna [dati, errori]. */
     private static function validatePost(): array
     {

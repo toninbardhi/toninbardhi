@@ -168,6 +168,79 @@ class Describe
         return self::clean($text, 1000);
     }
 
+    /**
+     * Genera una bozza di "Spotlight" per un prodotto/sito.
+     * Restituisce tre sezioni in italiano (HTML semplice, solo <p>):
+     *   - presentation: cos'è (presentazione neutra)
+     *   - web_view:     "come lo vede il web" (percezione generale)
+     *   - ai_view:      "come lo vede l'AI" (descrizione sintetica)
+     * Sempre descrittivo e neutro: niente voti, niente giudizi, nessun
+     * dato inventato o affermazione negativa su persone/aziende reali.
+     * Ritorna [] se l'AI non è configurata o fallisce: in tal caso
+     * l'admin compila a mano.
+     */
+    public static function spotlight(array $cfg, string $name, string $url, string $hint = ''): array
+    {
+        if (empty($cfg['ai_enabled']) || empty($cfg['ai_api_key'])) {
+            return [];
+        }
+        $prompt = "Sei un redattore che prepara una scheda di presentazione (non una recensione) "
+                . "per una directory di siti web, in italiano.\n"
+                . "Prepara TRE sezioni brevi, neutre e descrittive su questo soggetto. "
+                . "Regole ferree: nessun voto o giudizio; niente toni promozionali; "
+                . "NON inventare dati, numeri, premi o fatti; non scrivere nulla di negativo o "
+                . "diffamatorio; se non hai informazioni, resta generico. Ogni sezione 2-4 frasi.\n\n"
+                . "Soggetto: {$name}\nURL: {$url}\n"
+                . ($hint !== '' ? "Info dal sito: {$hint}\n" : '')
+                . "\nRispondi SOLO con un oggetto JSON valido con queste chiavi (testo semplice, senza HTML):\n"
+                . '{"presentation":"cos\'è, in modo neutro","web_view":"come viene percepito/presentato sul web in generale","ai_view":"come un\'AI lo descriverebbe sinteticamente"}';
+
+        $payload = json_encode([
+            'model'      => $cfg['ai_model'] ?? 'claude-haiku-4-5',
+            'max_tokens' => 900,
+            'messages'   => [['role' => 'user', 'content' => $prompt]],
+        ]);
+
+        $ch = curl_init('https://api.anthropic.com/v1/messages');
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST           => true,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTPHEADER     => [
+                'content-type: application/json',
+                'x-api-key: ' . $cfg['ai_api_key'],
+                'anthropic-version: 2023-06-01',
+            ],
+            CURLOPT_POSTFIELDS     => $payload,
+        ]);
+        $res = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($res === false || $code !== 200) {
+            return [];
+        }
+        $data = json_decode($res, true);
+        $text = $data['content'][0]['text'] ?? '';
+        // Estrai il primo blocco JSON dalla risposta.
+        if (!preg_match('/\{.*\}/s', $text, $m)) {
+            return [];
+        }
+        $parsed = json_decode($m[0], true);
+        if (!is_array($parsed)) {
+            return [];
+        }
+        $toHtml = static function (string $s): string {
+            $s = self::clean($s, 1500);
+            return $s !== '' ? '<p>' . htmlspecialchars($s, ENT_QUOTES, 'UTF-8') . '</p>' : '';
+        };
+        return [
+            'presentation' => $toHtml((string) ($parsed['presentation'] ?? '')),
+            'web_view'     => $toHtml((string) ($parsed['web_view'] ?? '')),
+            'ai_view'      => $toHtml((string) ($parsed['ai_view'] ?? '')),
+        ];
+    }
+
     /* ------------------------------------------------------------ */
 
     private static function firstContent(DOMXPath $xp, array $queries): string

@@ -31,6 +31,7 @@ $badge = $pending_badge ?? 0;
       <?php if ($badge > 0): ?><span class="count-pill"><?= (int)$badge ?></span><?php endif; ?>
     </a>
     <a class="<?= $nav('/admin/posts') ?>" href="<?= e(url('/admin/posts')) ?>">Blog</a>
+    <a class="<?= $nav('/admin/spotlight') ?>" href="<?= e(url('/admin/spotlight')) ?>">🔦 Spotlight</a>
     <?php if (is_admin()): ?>
       <a class="<?= $nav('/admin/users') ?>" href="<?= e(url('/admin/users')) ?>">Utenti</a>
       <a class="<?= $nav('/admin/settings') ?>" href="<?= e(url('/admin/settings')) ?>">Impostazioni</a>

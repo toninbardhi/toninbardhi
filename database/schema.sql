@@ -114,6 +114,39 @@ CREATE TABLE `posts` (
     REFERENCES `categories` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ------------------------------------------------------------
+--  Schede (presentazione di prodotti/siti, assistite da AI)
+--  NON è una recensione: nessun voto/giudizio. Mostra una
+--  presentazione + "come lo vede il web" + "come lo vede l'AI".
+--  Inclusione anche a pagamento. Disclosure AI obbligatoria.
+-- ------------------------------------------------------------
+DROP TABLE IF EXISTS `spotlights`;
+CREATE TABLE `spotlights` (
+  `id`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title`         VARCHAR(200) NOT NULL,
+  `slug`          VARCHAR(220) NOT NULL,
+  `subject_name`  VARCHAR(200) NOT NULL,           -- prodotto o sito presentato
+  `subject_url`   VARCHAR(500) NULL,
+  `category_id`   INT UNSIGNED NULL,               -- stesse categorie della directory
+  `presentation`  MEDIUMTEXT NULL,                  -- "Presentazione" (cos'è)
+  `web_view`      MEDIUMTEXT NULL,                  -- "Come lo vede il web"
+  `ai_view`       MEDIUMTEXT NULL,                  -- "Come lo vede l'AI"
+  `cover_image`   VARCHAR(500) NULL,
+  `ai_generated`  TINYINT(1) NOT NULL DEFAULT 1,    -- disclosure "assistito da AI"
+  `is_paid`       TINYINT(1) NOT NULL DEFAULT 0,    -- inclusione a pagamento (facoltativa)
+  `sponsor_name`  VARCHAR(160) NULL,
+  `status`        ENUM('draft','published') NOT NULL DEFAULT 'draft',
+  `author`        VARCHAR(120) NULL,
+  `published_at`  DATETIME NULL,
+  `created_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_spotlights_slug` (`slug`),
+  KEY `idx_spotlights_status` (`status`,`published_at`),
+  KEY `idx_spotlights_category` (`category_id`),
+  CONSTRAINT `fk_spotlights_category` FOREIGN KEY (`category_id`)
+    REFERENCES `categories` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 SET foreign_key_checks = 1;
 
 -- ------------------------------------------------------------
@@ -301,3 +334,15 @@ INSERT INTO `posts` (`title`,`slug`,`excerpt`,`body`,`tags`,`status`,`author`,`p
    '<p>Benvenuto nel blog di <strong>webdirectory.link</strong>!</p><p>Qui pubblicheremo novità, siti interessanti e consigli. Puoi <a href="/suggest">suggerire un sito</a> in qualsiasi momento.</p>',
    'novità, guida',
    'published', 'Amministratore', NOW());
+
+-- Scheda "Spotlight" di esempio (presentazione, assistita da AI)
+INSERT INTO `spotlights`
+  (`title`,`slug`,`subject_name`,`subject_url`,`presentation`,`web_view`,`ai_view`,`ai_generated`,`is_paid`,`status`,`author`,`published_at`)
+VALUES
+  ('Spotlight: Example.com',
+   'example-com',
+   'Example.com', 'https://example.com',
+   '<p><strong>Example.com</strong> è un sito di esempio usato in tutto il mondo per documentazione e test.</p>',
+   '<p>Sul web è conosciuto come dominio dimostrativo standard, citato in guide e tutorial.</p>',
+   '<p>Un''intelligenza artificiale lo descrive come un riferimento neutro e affidabile per esempi tecnici.</p>',
+   1, 0, 'published', 'Amministratore', NOW());

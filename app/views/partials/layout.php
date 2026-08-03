@@ -40,6 +40,7 @@ $adsOn = !empty($ads['client']);
       <a class="logo" href="<?= e(url('/')) ?>" aria-label="<?= e($siteName) ?>">
         <img src="<?= e(url('assets/logo.svg')) ?>" alt="<?= e($siteName) ?>" class="logo-img">
       </a>
+      <a class="nav-link" href="<?= e(url('/spotlight')) ?>">Spotlight</a>
       <a class="nav-link" href="<?= e(url('/blog')) ?>">Blog</a>
       <form class="search" action="<?= e(url('/search')) ?>" method="get" role="search">
         <input type="search" name="q" placeholder="Cerca nella directory…" value="<?= e($_GET['q'] ?? '') ?>">
@@ -80,6 +81,8 @@ $adsOn = !empty($ads['client']);
 
   <footer class="site-footer">
     <div class="container">
+      <a href="<?= e(url('/spotlight')) ?>">Spotlight</a>
+      &nbsp;·&nbsp;
       <a href="<?= e(url('/blog')) ?>">Blog</a>
       &nbsp;·&nbsp;
       <a href="<?= e(url('/suggest')) ?>">Suggerisci un sito</a>
