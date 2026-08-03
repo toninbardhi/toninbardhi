@@ -156,6 +156,39 @@ class PublicController
         ]);
     }
 
+    /** Elenco articoli del blog. */
+    public static function blog(): void
+    {
+        global $CONFIG;
+        $perPage = (int) ($CONFIG['per_page'] ?? 20);
+        $page = max(1, (int) input('page', '1'));
+        $offset = ($page - 1) * $perPage;
+
+        view('public/blog', [
+            'title'   => 'Blog',
+            'posts'   => Post::published($perPage, $offset),
+            'total'   => Post::publishedCount(),
+            'page'    => $page,
+            'perPage' => $perPage,
+        ]);
+    }
+
+    /** Singolo articolo del blog. */
+    public static function post(string $slug): void
+    {
+        $post = Post::findBySlug($slug);
+        if (!$post || $post['status'] !== 'published') {
+            http_response_code(404);
+            view('errors/404', ['title' => 'Articolo non trovato']);
+            return;
+        }
+        view('public/post', [
+            'title'           => $post['title'],
+            'metaDescription' => $post['excerpt'] ?: null,
+            'post'            => $post,
+        ]);
+    }
+
     /** Pagine statiche: privacy, cookie, contatti. */
     public static function page(string $name): void
     {

@@ -24,6 +24,17 @@ img{max-width:100%}
 .logo:hover{text-decoration:none}
 .logo-img{display:block; height:60px; width:auto}
 @media(max-width:520px){ .logo-img{height:46px} }
+.nav-link{font-weight:600; color:var(--ink); padding:6px 4px; font-size:.95rem}
+.nav-link:hover{color:var(--brand)}
+
+/* Blog: corpo articolo */
+.post-body{line-height:1.7}
+.post-body p{margin:0 0 14px}
+.post-body h2,.post-body h3{margin:22px 0 8px}
+.post-body img{max-width:100%; height:auto; border-radius:8px; margin:10px 0}
+.post-body ul,.post-body ol{margin:0 0 14px 20px}
+.post-body a{color:var(--brand)}
+.post-single h1{font-size:1.9rem}
 .site-header form.search{margin-left:auto; display:flex; gap:6px}
 .site-header input[type=search]{
   padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius);

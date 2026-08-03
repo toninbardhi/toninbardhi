@@ -1,7 +1,7 @@
 <?php /** @var array $roots */ ?>
 <div class="panel">
-  <h1><?= e($CONFIG['site']['name'] ?? 'Directory') ?></h1>
-  <p class="muted">Sfoglia le categorie della directory o usa la ricerca in alto.</p>
+  <h1><?= e(setting('home_title', setting('site_name', $CONFIG['site']['name'] ?? 'Directory'))) ?></h1>
+  <p class="muted"><?= e(setting('home_subtitle', 'Sfoglia le categorie della directory o usa la ricerca in alto.')) ?></p>
 </div>
 
 <?php if (!$roots): ?>

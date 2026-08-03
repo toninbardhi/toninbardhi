@@ -1,6 +1,6 @@
 <?php
 /** Layout area riservata. Variabili: $content, $title, $pending_badge. */
-$siteName = $CONFIG['site']['name'] ?? 'Directory';
+$siteName = setting('site_name', $CONFIG['site']['name'] ?? 'Directory');
 $flash = take_flash();
 $u = current_user();
 $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '';
@@ -30,8 +30,10 @@ $badge = $pending_badge ?? 0;
       Suggerimenti
       <?php if ($badge > 0): ?><span class="count-pill"><?= (int)$badge ?></span><?php endif; ?>
     </a>
+    <a class="<?= $nav('/admin/posts') ?>" href="<?= e(url('/admin/posts')) ?>">Blog</a>
     <?php if (is_admin()): ?>
       <a class="<?= $nav('/admin/users') ?>" href="<?= e(url('/admin/users')) ?>">Utenti</a>
+      <a class="<?= $nav('/admin/settings') ?>" href="<?= e(url('/admin/settings')) ?>">Impostazioni</a>
     <?php endif; ?>
     <a class="<?= $nav('/admin/profile') ?>" href="<?= e(url('/admin/profile')) ?>">Il mio profilo</a>
     <a href="<?= e(url('/')) ?>">↗ Vedi il sito</a>

@@ -1,6 +1,6 @@
 <?php
-$site  = $CONFIG['site']['name'] ?? 'il sito';
-$email = $CONFIG['site']['email'] ?? '';
+$site  = setting('site_name', $CONFIG['site']['name'] ?? 'il sito');
+$email = setting('contact_email', $CONFIG['site']['email'] ?? '');
 ?>
 <div class="panel page-content">
   <h1>Contatti</h1>

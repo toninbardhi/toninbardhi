@@ -1,4 +1,4 @@
-<?php $site = $CONFIG['site']['name'] ?? 'il sito'; ?>
+<?php $site = setting('site_name', $CONFIG['site']['name'] ?? 'il sito'); ?>
 <div class="panel page-content">
   <h1>Cookie Policy</h1>
   <p class="muted">Come <strong><?= e($site) ?></strong> usa i cookie.</p>

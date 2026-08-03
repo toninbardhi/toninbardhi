@@ -354,6 +354,126 @@ class AdminController
         redirect('/admin/users');
     }
 
+    /* ============================= Impostazioni ============================= */
+
+    public static function settings(): void
+    {
+        require_admin();
+        self::render('admin/settings', [
+            'title' => 'Impostazioni',
+            's'     => Setting::all(),
+        ]);
+    }
+
+    public static function settingsUpdate(): void
+    {
+        require_admin();
+        csrf_check();
+        foreach (['site_name', 'home_title', 'home_subtitle', 'footer_text', 'contact_email', 'owner'] as $k) {
+            Setting::set($k, input($k));
+        }
+        flash('success', 'Impostazioni salvate.');
+        redirect('/admin/settings');
+    }
+
+    /* ================================= Blog ================================= */
+
+    public static function posts(): void
+    {
+        require_login();
+        self::render('admin/posts', ['title' => 'Blog', 'posts' => Post::all()]);
+    }
+
+    public static function postForm(?int $id = null): void
+    {
+        require_login();
+        $post = $id ? Post::find($id) : null;
+        if ($id && !$post) {
+            self::notFound();
+        }
+        self::render('admin/post_form', [
+            'title' => $id ? 'Modifica articolo' : 'Nuovo articolo',
+            'post'  => $post,
+        ]);
+    }
+
+    public static function postStore(): void
+    {
+        require_login();
+        csrf_check();
+        [$data, $errors] = self::validatePost();
+        if ($errors) {
+            flash('error', implode(' ', $errors));
+            redirect('/admin/posts/create');
+        }
+        $data['slug'] = Post::uniqueSlug($data['slug'] !== '' ? $data['slug'] : $data['title']);
+        $data['author'] = current_user()['name'] ?? null;
+        Post::create($data);
+        flash('success', 'Articolo creato.');
+        redirect('/admin/posts');
+    }
+
+    public static function postUpdate(int $id): void
+    {
+        require_login();
+        csrf_check();
+        if (!Post::find($id)) {
+            self::notFound();
+        }
+        [$data, $errors] = self::validatePost();
+        if ($errors) {
+            flash('error', implode(' ', $errors));
+            redirect("/admin/posts/$id/edit");
+        }
+        $data['slug'] = Post::uniqueSlug($data['slug'] !== '' ? $data['slug'] : $data['title'], $id);
+        Post::update($id, $data);
+        flash('success', 'Articolo aggiornato.');
+        redirect('/admin/posts');
+    }
+
+    public static function postDelete(int $id): void
+    {
+        require_login();
+        csrf_check();
+        Post::delete($id);
+        flash('success', 'Articolo eliminato.');
+        redirect('/admin/posts');
+    }
+
+    /** Valida un articolo. Ritorna [dati, errori]. */
+    private static function validatePost(): array
+    {
+        $title   = input('title');
+        $slug    = input('slug');
+        $excerpt = input('excerpt');
+        $body    = $_POST['body'] ?? '';           // HTML consentito (autore fidato)
+        $body    = is_string($body) ? trim($body) : '';
+        $status  = input('status') === 'published' ? 'published' : 'draft';
+
+        $errors = [];
+        if ($title === '') {
+            $errors[] = 'Il titolo è obbligatorio.';
+        }
+
+        // Data di pubblicazione: ora se pubblicato e non impostata.
+        $published = null;
+        if ($status === 'published') {
+            $when = input('published_at');
+            $published = ($when !== '' && strtotime($when))
+                ? date('Y-m-d H:i:s', strtotime($when))
+                : date('Y-m-d H:i:s');
+        }
+
+        return [[
+            'title'        => $title,
+            'slug'         => $slug,
+            'excerpt'      => $excerpt !== '' ? $excerpt : null,
+            'body'         => $body !== '' ? $body : null,
+            'status'       => $status,
+            'published_at' => $published,
+        ], $errors];
+    }
+
     /* =============================== Helper =============================== */
 
     /** Valida i dati di un link dal form. Ritorna [dati, errori]. */

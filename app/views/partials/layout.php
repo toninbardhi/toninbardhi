@@ -1,6 +1,6 @@
 <?php
 /** Layout pubblico. Variabili: $content, $title, $CONFIG, $metaDescription. */
-$siteName = $CONFIG['site']['name'] ?? 'Directory';
+$siteName = setting('site_name', $CONFIG['site']['name'] ?? 'Directory');
 $flash = take_flash();
 $pageTitle = (isset($title) && $title !== null && $title !== '')
     ? $title . ' · ' . $siteName
@@ -34,6 +34,7 @@ $adsOn = !empty($ads['client']);
       <a class="logo" href="<?= e(url('/')) ?>" aria-label="<?= e($siteName) ?>">
         <img src="<?= e(url('assets/logo.svg')) ?>" alt="<?= e($siteName) ?>" class="logo-img">
       </a>
+      <a class="nav-link" href="<?= e(url('/blog')) ?>">Blog</a>
       <form class="search" action="<?= e(url('/search')) ?>" method="get" role="search">
         <input type="search" name="q" placeholder="Cerca nella directory…" value="<?= e($_GET['q'] ?? '') ?>">
         <button class="btn" type="submit">Cerca</button>
@@ -73,6 +74,8 @@ $adsOn = !empty($ads['client']);
 
   <footer class="site-footer">
     <div class="container">
+      <a href="<?= e(url('/blog')) ?>">Blog</a>
+      &nbsp;·&nbsp;
       <a href="<?= e(url('/suggest')) ?>">Suggerisci un sito</a>
       &nbsp;·&nbsp;
       <a href="<?= e(url('/privacy')) ?>">Privacy</a>
@@ -82,7 +85,7 @@ $adsOn = !empty($ads['client']);
       <a href="<?= e(url('/contatti')) ?>">Contatti</a>
       &nbsp;·&nbsp;
       <a href="<?= e(url('/admin')) ?>">Area riservata</a>
-      <p>&copy; <?= date('Y') ?> <?= e($siteName) ?> — directory web in stile Open Directory.</p>
+      <p>&copy; <?= date('Y') ?> <?= e($siteName) ?> — <?= e(setting('footer_text', 'directory web in stile Open Directory.')) ?></p>
     </div>
   </footer>
 

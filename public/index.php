@@ -42,6 +42,8 @@ require APP_PATH . '/Describe.php';
 require APP_PATH . '/models/Category.php';
 require APP_PATH . '/models/Link.php';
 require APP_PATH . '/models/User.php';
+require APP_PATH . '/models/Setting.php';
+require APP_PATH . '/models/Post.php';
 require APP_PATH . '/controllers/PublicController.php';
 require APP_PATH . '/controllers/AuthController.php';
 require APP_PATH . '/controllers/AdminController.php';
@@ -78,6 +80,8 @@ $routes = [
     ['POST', '#^/suggest$#',                 fn()      => PublicController::suggestSubmit()],
     ['GET',  '#^/fetch-description$#',        fn()      => PublicController::fetchDescription()],
     ['GET',  '#^/(privacy|cookie|contatti)$#', fn($p)   => PublicController::page($p)],
+    ['GET',  '#^/blog$#',                     fn()      => PublicController::blog()],
+    ['GET',  '#^/blog/([a-z0-9-]+)$#',        fn($s)    => PublicController::post($s)],
 
     // Autenticazione
     ['GET',  '#^/login$#',                   fn()      => AuthController::loginForm()],
@@ -88,6 +92,16 @@ $routes = [
     ['GET',  '#^/admin$#',                   fn()      => AdminController::dashboard()],
     ['GET',  '#^/admin/profile$#',           fn()      => AdminController::profile()],
     ['POST', '#^/admin/profile$#',           fn()      => AdminController::profileUpdate()],
+
+    ['GET',  '#^/admin/settings$#',          fn()      => AdminController::settings()],
+    ['POST', '#^/admin/settings$#',          fn()      => AdminController::settingsUpdate()],
+
+    ['GET',  '#^/admin/posts$#',             fn()      => AdminController::posts()],
+    ['GET',  '#^/admin/posts/create$#',      fn()      => AdminController::postForm()],
+    ['POST', '#^/admin/posts/create$#',      fn()      => AdminController::postStore()],
+    ['GET',  '#^/admin/posts/(\d+)/edit$#',  fn($id)   => AdminController::postForm((int)$id)],
+    ['POST', '#^/admin/posts/(\d+)/edit$#',  fn($id)   => AdminController::postUpdate((int)$id)],
+    ['POST', '#^/admin/posts/(\d+)/delete$#',fn($id)   => AdminController::postDelete((int)$id)],
 
     ['GET',  '#^/admin/categories$#',        fn()      => AdminController::categories()],
     ['GET',  '#^/admin/categories/create$#', fn()      => AdminController::categoryForm()],

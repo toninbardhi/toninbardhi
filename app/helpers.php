@@ -9,6 +9,12 @@ function e(?string $v): string
     return htmlspecialchars((string) $v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+/** Valore di un'impostazione del sito (modificabile dal pannello). */
+function setting(string $key, string $default = ''): string
+{
+    return Setting::get($key, $default);
+}
+
 /** URL (relativo alla root del dominio) rispetto alla base configurata. */
 function url(string $path = ''): string
 {

@@ -1,7 +1,7 @@
 <?php
-$site  = $CONFIG['site']['name'] ?? 'il sito';
-$email = $CONFIG['site']['email'] ?? '';
-$owner = $CONFIG['site']['owner'] ?? '';
+$site  = setting('site_name', $CONFIG['site']['name'] ?? 'il sito');
+$email = setting('contact_email', $CONFIG['site']['email'] ?? '');
+$owner = setting('owner', $CONFIG['site']['owner'] ?? '');
 ?>
 <div class="panel page-content">
   <h1>Informativa sulla privacy</h1>
