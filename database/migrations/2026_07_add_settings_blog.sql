@@ -31,3 +31,15 @@ CREATE TABLE IF NOT EXISTS `posts` (
   UNIQUE KEY `uq_posts_slug` (`slug`),
   KEY `idx_posts_status` (`status`,`published_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------
+--  Blog: copertina, tag e collegamento a una categoria.
+--  (Se hai già la tabella `posts` senza queste colonne.)
+-- ------------------------------------------------------------
+ALTER TABLE `posts`
+  ADD COLUMN `cover_image` VARCHAR(500) NULL AFTER `body`,
+  ADD COLUMN `tags`        VARCHAR(255) NULL AFTER `cover_image`,
+  ADD COLUMN `category_id` INT UNSIGNED NULL AFTER `tags`,
+  ADD KEY `idx_posts_category` (`category_id`),
+  ADD CONSTRAINT `fk_posts_category` FOREIGN KEY (`category_id`)
+    REFERENCES `categories` (`id`) ON DELETE SET NULL;

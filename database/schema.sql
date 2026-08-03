@@ -94,13 +94,19 @@ CREATE TABLE `posts` (
   `slug`         VARCHAR(220) NOT NULL,
   `excerpt`      VARCHAR(500) NULL,
   `body`         MEDIUMTEXT NULL,
+  `cover_image`  VARCHAR(500) NULL,
+  `tags`         VARCHAR(255) NULL,
+  `category_id`  INT UNSIGNED NULL,
   `status`       ENUM('draft','published') NOT NULL DEFAULT 'draft',
   `author`       VARCHAR(120) NULL,
   `published_at` DATETIME NULL,
   `created_at`   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_posts_slug` (`slug`),
-  KEY `idx_posts_status` (`status`,`published_at`)
+  KEY `idx_posts_status` (`status`,`published_at`),
+  KEY `idx_posts_category` (`category_id`),
+  CONSTRAINT `fk_posts_category` FOREIGN KEY (`category_id`)
+    REFERENCES `categories` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET foreign_key_checks = 1;
@@ -281,9 +287,10 @@ INSERT INTO `settings` (`key`,`value`) VALUES
   ('owner',         '');
 
 -- Articolo di blog di esempio
-INSERT INTO `posts` (`title`,`slug`,`excerpt`,`body`,`status`,`author`,`published_at`) VALUES
+INSERT INTO `posts` (`title`,`slug`,`excerpt`,`body`,`tags`,`status`,`author`,`published_at`) VALUES
   ('Benvenuto su webdirectory.link',
    'benvenuto',
    'Il primo articolo del nostro blog: cos''è una web directory e come funziona.',
    '<p>Benvenuto nel blog di <strong>webdirectory.link</strong>!</p><p>Qui pubblicheremo novità, siti interessanti e consigli. Puoi <a href="/suggest">suggerire un sito</a> in qualsiasi momento.</p>',
+   'novità, guida',
    'published', 'Amministratore', NOW());

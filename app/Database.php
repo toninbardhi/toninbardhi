@@ -45,4 +45,10 @@ class Database
         }
         return self::$pdo;
     }
+
+    /** Nome del driver attivo: "mysql", "sqlite", ecc. */
+    public static function driver(): string
+    {
+        return (string) self::pdo()->getAttribute(PDO::ATTR_DRIVER_NAME);
+    }
 }

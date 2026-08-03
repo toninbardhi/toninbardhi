@@ -92,9 +92,15 @@ class PublicController
         };
 
         $entry(abs_url('/'), null, '1.0');
+        $entry(abs_url('/blog'), null, '0.6');
 
         foreach (Category::all() as $c) {
             $entry(abs_url($c['path']), $c['created_at'] ?? null, '0.7');
+        }
+
+        // Articoli del blog pubblicati.
+        foreach (Post::published(1000, 0) as $p) {
+            $entry(abs_url('/blog/' . $p['slug']), $p['published_at'] ?? $p['created_at'] ?? null, '0.6');
         }
 
         echo '</urlset>' . "\n";
@@ -156,20 +162,24 @@ class PublicController
         ]);
     }
 
-    /** Elenco articoli del blog. */
+    /** Elenco articoli del blog (con eventuale filtro per tag). */
     public static function blog(): void
     {
         global $CONFIG;
         $perPage = (int) ($CONFIG['per_page'] ?? 20);
         $page = max(1, (int) input('page', '1'));
         $offset = ($page - 1) * $perPage;
+        $tag = trim(input('tag'));
+        $tag = $tag !== '' ? $tag : null;
 
         view('public/blog', [
-            'title'   => 'Blog',
-            'posts'   => Post::published($perPage, $offset),
-            'total'   => Post::publishedCount(),
-            'page'    => $page,
-            'perPage' => $perPage,
+            'title'    => $tag ? 'Blog · #' . $tag : 'Blog',
+            'posts'    => Post::published($perPage, $offset, $tag),
+            'total'    => Post::publishedCount($tag),
+            'page'     => $page,
+            'perPage'  => $perPage,
+            'tag'      => $tag,
+            'tagCloud' => Post::tagCloud(),
         ]);
     }
 
@@ -185,6 +195,7 @@ class PublicController
         view('public/post', [
             'title'           => $post['title'],
             'metaDescription' => $post['excerpt'] ?: null,
+            'metaImage'       => $post['cover_image'] ?: null,
             'post'            => $post,
         ]);
     }

@@ -6,6 +6,7 @@ $pageTitle = (isset($title) && $title !== null && $title !== '')
     ? $title . ' · ' . $siteName
     : $siteName;
 $desc = $metaDescription ?? 'Directory web organizzata in categorie: sfoglia e scopri i migliori siti selezionati.';
+$ogImage = $metaImage ?? null;
 $reqPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
 $canonical = abs_url($reqPath);
 $ads = $CONFIG['adsense'] ?? [];
@@ -24,7 +25,12 @@ $adsOn = !empty($ads['client']);
   <meta property="og:title" content="<?= e($pageTitle) ?>">
   <meta property="og:description" content="<?= e($desc) ?>">
   <meta property="og:url" content="<?= e($canonical) ?>">
-  <meta name="twitter:card" content="summary">
+  <?php if ($ogImage): ?>
+    <meta property="og:image" content="<?= e(preg_match('#^https?://#i', $ogImage) ? $ogImage : abs_url($ogImage)) ?>">
+    <meta name="twitter:card" content="summary_large_image">
+  <?php else: ?>
+    <meta name="twitter:card" content="summary">
+  <?php endif; ?>
   <link rel="stylesheet" href="<?= e(url('assets/css/style.css')) ?>">
   <?php /* AdSense viene caricato solo dopo il consenso (vedi banner cookie). */ ?>
 </head>

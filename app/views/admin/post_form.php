@@ -1,8 +1,9 @@
 <?php
-/** @var array|null $post */
+/** @var array|null $post @var array $categories */
 $editing = $post !== null;
 $action = $editing ? url('/admin/posts/' . $post['id'] . '/edit') : url('/admin/posts/create');
 $status = $post['status'] ?? 'draft';
+$postCat = $post['category_id'] ?? '';
 ?>
 <h1><?= $editing ? 'Modifica articolo' : 'Nuovo articolo' ?></h1>
 
@@ -28,6 +29,29 @@ $status = $post['status'] ?? 'draft';
       <label for="body">Testo dell'articolo</label>
       <textarea name="body" id="body" style="min-height:280px"><?= e($post['body'] ?? '') ?></textarea>
       <div class="hint">Puoi usare l'HTML per la formattazione (paragrafi &lt;p&gt;, grassetto &lt;strong&gt;, link &lt;a&gt;, immagini &lt;img&gt;).</div>
+    </div>
+    <div class="field">
+      <label for="cover_image">Immagine di copertina (URL)</label>
+      <input type="url" name="cover_image" id="cover_image" maxlength="500" placeholder="https://…/foto.jpg"
+             value="<?= e($post['cover_image'] ?? '') ?>">
+      <div class="hint">Mostrata in cima all'articolo, nell'elenco del blog e come anteprima sui social.</div>
+      <?php if (!empty($post['cover_image'])): ?>
+        <img src="<?= e($post['cover_image']) ?>" alt="" style="margin-top:8px; max-height:120px; border-radius:8px; border:1px solid var(--border)">
+      <?php endif; ?>
+    </div>
+    <div class="field">
+      <label for="tags">Tag (separati da virgola)</label>
+      <input type="text" name="tags" id="tags" maxlength="255" placeholder="es. novità, guida, crypto"
+             value="<?= e($post['tags'] ?? '') ?>">
+      <div class="hint">Massimo 10. Diventano filtri cliccabili nel blog (es. <code>/blog?tag=guida</code>).</div>
+    </div>
+    <div class="field">
+      <label for="category_id">Categoria collegata (facoltativa)</label>
+      <select name="category_id" id="category_id">
+        <option value="">— Nessuna —</option>
+        <?= category_options($categories, $postCat) ?>
+      </select>
+      <div class="hint">Collega l'articolo a una categoria della directory: apparirà un link reciproco.</div>
     </div>
     <div class="field">
       <label for="status">Stato</label>

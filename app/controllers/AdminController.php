@@ -392,8 +392,9 @@ class AdminController
             self::notFound();
         }
         self::render('admin/post_form', [
-            'title' => $id ? 'Modifica articolo' : 'Nuovo articolo',
-            'post'  => $post,
+            'title'      => $id ? 'Modifica articolo' : 'Nuovo articolo',
+            'post'       => $post,
+            'categories' => Category::all(),
         ]);
     }
 
@@ -449,11 +450,31 @@ class AdminController
         $body    = $_POST['body'] ?? '';           // HTML consentito (autore fidato)
         $body    = is_string($body) ? trim($body) : '';
         $status  = input('status') === 'published' ? 'published' : 'draft';
+        $cover   = input('cover_image');
+        $tags    = input('tags');
+        $catId   = self::nullableInt('category_id');
 
         $errors = [];
         if ($title === '') {
             $errors[] = 'Il titolo è obbligatorio.';
         }
+        if ($cover !== '' && !filter_var($cover, FILTER_VALIDATE_URL)) {
+            $errors[] = 'L\'URL dell\'immagine di copertina non è valido.';
+        }
+        if ($catId !== null && !Category::find($catId)) {
+            $errors[] = 'Categoria collegata non valida.';
+            $catId = null;
+        }
+
+        // Normalizza i tag: "a, b ,c" -> "a, b, c" (max 10, senza duplicati).
+        $tagList = array_slice(
+            array_values(array_unique(array_filter(
+                array_map('trim', explode(',', $tags)),
+                fn($t) => $t !== ''
+            ))),
+            0, 10
+        );
+        $tagsClean = $tagList ? implode(', ', $tagList) : null;
 
         // Data di pubblicazione: ora se pubblicato e non impostata.
         $published = null;
@@ -469,6 +490,9 @@ class AdminController
             'slug'         => $slug,
             'excerpt'      => $excerpt !== '' ? $excerpt : null,
             'body'         => $body !== '' ? $body : null,
+            'cover_image'  => $cover !== '' ? $cover : null,
+            'tags'         => $tagsClean,
+            'category_id'  => $catId,
             'status'       => $status,
             'published_at' => $published,
         ], $errors];
