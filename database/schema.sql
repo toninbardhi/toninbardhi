@@ -97,6 +97,11 @@ CREATE TABLE `posts` (
   `cover_image`  VARCHAR(500) NULL,
   `tags`         VARCHAR(255) NULL,
   `category_id`  INT UNSIGNED NULL,
+  `is_sponsored`    TINYINT(1) NOT NULL DEFAULT 0,
+  `sponsor_name`    VARCHAR(160) NULL,
+  `sponsor_url`     VARCHAR(500) NULL,
+  `sponsor_price`   DECIMAL(8,2) NULL,
+  `sponsored_until` DATE NULL,
   `status`       ENUM('draft','published') NOT NULL DEFAULT 'draft',
   `author`       VARCHAR(120) NULL,
   `published_at` DATETIME NULL,
@@ -284,7 +289,9 @@ INSERT INTO `settings` (`key`,`value`) VALUES
   ('home_subtitle', 'Sfoglia le categorie della directory o usa la ricerca in alto.'),
   ('footer_text',   'directory web in stile Open Directory.'),
   ('contact_email', 'info@webdirectory.link'),
-  ('owner',         '');
+  ('owner',         ''),
+  ('sponsor_price', ''),
+  ('sponsor_info',  'Vuoi pubblicare un articolo sponsorizzato sul nostro blog? Scrivici.');
 
 -- Articolo di blog di esempio
 INSERT INTO `posts` (`title`,`slug`,`excerpt`,`body`,`tags`,`status`,`author`,`published_at`) VALUES

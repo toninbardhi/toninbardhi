@@ -34,6 +34,22 @@ $val = fn(string $k, string $d = '') => e($s[$k] ?? $d);
       <input type="text" name="owner" id="owner" value="<?= $val('owner') ?>">
       <div class="hint">Il tuo nome, mostrato nell'informativa privacy.</div>
     </div>
+
+    <fieldset class="featured-box" style="margin-top:8px">
+      <legend>💰 Articoli sponsorizzati</legend>
+      <div class="field" style="margin-bottom:12px">
+        <label for="sponsor_price">Prezzo per articolo (€)</label>
+        <input type="text" name="sponsor_price" id="sponsor_price" inputmode="decimal"
+               placeholder="es. 30" value="<?= $val('sponsor_price') ?>">
+        <div class="hint">Lascia vuoto per non mostrare il prezzo. È il "tot ad articolo" che vede chi vuole pubblicare.</div>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label for="sponsor_info">Testo dell'offerta</label>
+        <textarea name="sponsor_info" id="sponsor_info" style="min-height:60px"><?= $val('sponsor_info') ?></textarea>
+        <div class="hint">Mostrato nella pagina Contatti e in fondo al blog, con l'invito a scriverti.</div>
+      </div>
+    </fieldset>
+
     <div class="form-actions">
       <button class="btn" type="submit">Salva impostazioni</button>
     </div>

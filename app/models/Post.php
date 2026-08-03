@@ -35,6 +35,15 @@ class Post
         )->fetchAll();
     }
 
+    /** Articoli sponsorizzati (per il riepilogo nell'area admin). */
+    public static function sponsored(): array
+    {
+        return self::db()->query(
+            'SELECT * FROM posts WHERE is_sponsored = 1
+             ORDER BY (sponsored_until IS NULL), sponsored_until ASC, id DESC'
+        )->fetchAll();
+    }
+
     /**
      * Articoli pubblicati (pubblico), con paginazione.
      * Se $tag è indicato, filtra per quel tag.
@@ -137,20 +146,29 @@ class Post
     public static function create(array $d): int
     {
         $st = self::db()->prepare(
-            'INSERT INTO posts (title, slug, excerpt, body, cover_image, tags, category_id, status, author, published_at)
-             VALUES (:title, :slug, :excerpt, :body, :cover_image, :tags, :category_id, :status, :author, :published_at)'
+            'INSERT INTO posts (title, slug, excerpt, body, cover_image, tags, category_id,
+                                is_sponsored, sponsor_name, sponsor_url, sponsor_price, sponsored_until,
+                                status, author, published_at)
+             VALUES (:title, :slug, :excerpt, :body, :cover_image, :tags, :category_id,
+                     :is_sponsored, :sponsor_name, :sponsor_url, :sponsor_price, :sponsored_until,
+                     :status, :author, :published_at)'
         );
         $st->execute([
-            ':title'        => $d['title'],
-            ':slug'         => $d['slug'],
-            ':excerpt'      => $d['excerpt'] ?? null,
-            ':body'         => $d['body'] ?? null,
-            ':cover_image'  => $d['cover_image'] ?? null,
-            ':tags'         => $d['tags'] ?? null,
-            ':category_id'  => $d['category_id'] ?? null,
-            ':status'       => $d['status'] ?? 'draft',
-            ':author'       => $d['author'] ?? null,
-            ':published_at' => $d['published_at'] ?? null,
+            ':title'           => $d['title'],
+            ':slug'            => $d['slug'],
+            ':excerpt'         => $d['excerpt'] ?? null,
+            ':body'            => $d['body'] ?? null,
+            ':cover_image'     => $d['cover_image'] ?? null,
+            ':tags'            => $d['tags'] ?? null,
+            ':category_id'     => $d['category_id'] ?? null,
+            ':is_sponsored'    => !empty($d['is_sponsored']) ? 1 : 0,
+            ':sponsor_name'    => $d['sponsor_name'] ?? null,
+            ':sponsor_url'     => $d['sponsor_url'] ?? null,
+            ':sponsor_price'   => $d['sponsor_price'] ?? null,
+            ':sponsored_until' => $d['sponsored_until'] ?? null,
+            ':status'          => $d['status'] ?? 'draft',
+            ':author'          => $d['author'] ?? null,
+            ':published_at'    => $d['published_at'] ?? null,
         ]);
         return (int) self::db()->lastInsertId();
     }
@@ -160,20 +178,28 @@ class Post
         $st = self::db()->prepare(
             'UPDATE posts SET title = :title, slug = :slug, excerpt = :excerpt,
                     body = :body, cover_image = :cover_image, tags = :tags,
-                    category_id = :category_id, status = :status, published_at = :published_at
+                    category_id = :category_id, is_sponsored = :is_sponsored,
+                    sponsor_name = :sponsor_name, sponsor_url = :sponsor_url,
+                    sponsor_price = :sponsor_price, sponsored_until = :sponsored_until,
+                    status = :status, published_at = :published_at
              WHERE id = :id'
         );
         $st->execute([
-            ':title'        => $d['title'],
-            ':slug'         => $d['slug'],
-            ':excerpt'      => $d['excerpt'] ?? null,
-            ':body'         => $d['body'] ?? null,
-            ':cover_image'  => $d['cover_image'] ?? null,
-            ':tags'         => $d['tags'] ?? null,
-            ':category_id'  => $d['category_id'] ?? null,
-            ':status'       => $d['status'] ?? 'draft',
-            ':published_at' => $d['published_at'] ?? null,
-            ':id'           => $id,
+            ':title'           => $d['title'],
+            ':slug'            => $d['slug'],
+            ':excerpt'         => $d['excerpt'] ?? null,
+            ':body'            => $d['body'] ?? null,
+            ':cover_image'     => $d['cover_image'] ?? null,
+            ':tags'            => $d['tags'] ?? null,
+            ':category_id'     => $d['category_id'] ?? null,
+            ':is_sponsored'    => !empty($d['is_sponsored']) ? 1 : 0,
+            ':sponsor_name'    => $d['sponsor_name'] ?? null,
+            ':sponsor_url'     => $d['sponsor_url'] ?? null,
+            ':sponsor_price'   => $d['sponsor_price'] ?? null,
+            ':sponsored_until' => $d['sponsored_until'] ?? null,
+            ':status'          => $d['status'] ?? 'draft',
+            ':published_at'    => $d['published_at'] ?? null,
+            ':id'              => $id,
         ]);
     }
 

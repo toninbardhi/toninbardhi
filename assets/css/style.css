@@ -51,6 +51,18 @@ img{max-width:100%}
 .tag-chip.small{padding:3px 10px; font-size:.78rem}
 .tag-chip .tc-n{opacity:.6; font-size:.78em; margin-left:2px}
 
+/* Disclosure "Sponsorizzato" in cima all'articolo */
+.sponsor-disclosure{
+  background:#fffdf5; border:1px solid #f5e0a3; border-radius:8px;
+  padding:8px 12px; margin:0 0 16px; font-size:.85rem; color:#7a5b00;
+}
+.sponsor-disclosure .badge{margin-right:6px}
+.sponsor-disclosure a{color:#7a5b00; text-decoration:underline}
+
+/* Riquadro "vuoi un articolo?" in fondo al blog */
+.sponsor-cta{background:#f5f9ff; border-color:#d3e2fb}
+.sponsor-cta .sponsor-price{font-size:1.05rem; margin:0 0 10px}
+
 /* Blog: corpo articolo */
 .post-body{line-height:1.7}
 .post-body p{margin:0 0 14px}

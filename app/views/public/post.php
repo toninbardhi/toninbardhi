@@ -8,6 +8,19 @@
 </nav>
 
 <article class="panel post-single">
+  <?php if (!empty($post['is_sponsored'])): ?>
+    <div class="sponsor-disclosure">
+      <span class="badge featured">Sponsorizzato</span>
+      Contenuto pubblicitario<?php if (!empty($post['sponsor_name'])): ?> a cura di
+        <?php if (!empty($post['sponsor_url'])): ?>
+          <a href="<?= e($post['sponsor_url']) ?>" rel="sponsored nofollow noopener" target="_blank"><strong><?= e($post['sponsor_name']) ?></strong></a>
+        <?php else: ?>
+          <strong><?= e($post['sponsor_name']) ?></strong>
+        <?php endif; ?>
+      <?php endif; ?>.
+    </div>
+  <?php endif; ?>
+
   <h1 style="margin-top:0"><?= e($post['title']) ?></h1>
   <div class="muted" style="font-size:.85rem; margin-bottom:16px">
     <?= e(date('d/m/Y', strtotime((string)($post['published_at'] ?? $post['created_at'])))) ?>

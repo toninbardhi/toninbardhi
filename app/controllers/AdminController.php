@@ -369,7 +369,7 @@ class AdminController
     {
         require_admin();
         csrf_check();
-        foreach (['site_name', 'home_title', 'home_subtitle', 'footer_text', 'contact_email', 'owner'] as $k) {
+        foreach (['site_name', 'home_title', 'home_subtitle', 'footer_text', 'contact_email', 'owner', 'sponsor_price', 'sponsor_info'] as $k) {
             Setting::set($k, input($k));
         }
         flash('success', 'Impostazioni salvate.');
@@ -454,6 +454,13 @@ class AdminController
         $tags    = input('tags');
         $catId   = self::nullableInt('category_id');
 
+        // Campi "sponsorizzato" (articolo a pagamento, gestito a mano).
+        $isSponsored = input('is_sponsored') === '1';
+        $sponsorName = input('sponsor_name');
+        $sponsorUrl  = input('sponsor_url');
+        $priceRaw    = str_replace(',', '.', input('sponsor_price'));
+        $until       = input('sponsored_until');
+
         $errors = [];
         if ($title === '') {
             $errors[] = 'Il titolo è obbligatorio.';
@@ -464,6 +471,30 @@ class AdminController
         if ($catId !== null && !Category::find($catId)) {
             $errors[] = 'Categoria collegata non valida.';
             $catId = null;
+        }
+
+        $price = null;
+        $sponsorUntil = null;
+        if ($isSponsored) {
+            if ($sponsorUrl !== '' && !filter_var($sponsorUrl, FILTER_VALIDATE_URL)) {
+                $errors[] = 'Il link dello sponsor non è un URL valido.';
+            }
+            if ($priceRaw !== '') {
+                if (!is_numeric($priceRaw) || (float) $priceRaw < 0) {
+                    $errors[] = 'Il prezzo deve essere un numero valido.';
+                } else {
+                    $price = round((float) $priceRaw, 2);
+                }
+            }
+            if ($until !== '' && !self::isValidDate($until)) {
+                $errors[] = 'La data di scadenza sponsorizzazione non è valida.';
+            } elseif ($until !== '') {
+                $sponsorUntil = $until;
+            }
+        } else {
+            // Se non è sponsorizzato, azzera i campi correlati.
+            $sponsorName = '';
+            $sponsorUrl  = '';
         }
 
         // Normalizza i tag: "a, b ,c" -> "a, b, c" (max 10, senza duplicati).
@@ -486,15 +517,20 @@ class AdminController
         }
 
         return [[
-            'title'        => $title,
-            'slug'         => $slug,
-            'excerpt'      => $excerpt !== '' ? $excerpt : null,
-            'body'         => $body !== '' ? $body : null,
-            'cover_image'  => $cover !== '' ? $cover : null,
-            'tags'         => $tagsClean,
-            'category_id'  => $catId,
-            'status'       => $status,
-            'published_at' => $published,
+            'title'           => $title,
+            'slug'            => $slug,
+            'excerpt'         => $excerpt !== '' ? $excerpt : null,
+            'body'            => $body !== '' ? $body : null,
+            'cover_image'     => $cover !== '' ? $cover : null,
+            'tags'            => $tagsClean,
+            'category_id'     => $catId,
+            'is_sponsored'    => $isSponsored ? 1 : 0,
+            'sponsor_name'    => $sponsorName !== '' ? $sponsorName : null,
+            'sponsor_url'     => $sponsorUrl !== '' ? $sponsorUrl : null,
+            'sponsor_price'   => $price,
+            'sponsored_until' => $sponsorUntil,
+            'status'          => $status,
+            'published_at'    => $published,
         ], $errors];
     }
 

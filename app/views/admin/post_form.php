@@ -53,6 +53,50 @@ $postCat = $post['category_id'] ?? '';
       </select>
       <div class="hint">Collega l'articolo a una categoria della directory: apparirà un link reciproco.</div>
     </div>
+
+    <?php
+      $isSponsored = !empty($post['is_sponsored']);
+      $spUntil = !empty($post['sponsored_until']) ? substr((string)$post['sponsored_until'], 0, 10) : date('Y-m-d', strtotime('+1 year'));
+    ?>
+    <fieldset class="featured-box">
+      <legend>💰 Articolo sponsorizzato (a pagamento)</legend>
+      <label class="check">
+        <input type="checkbox" name="is_sponsored" id="is_sponsored" value="1" <?= $isSponsored ? 'checked' : '' ?>>
+        Questo è un articolo pagato da uno sponsor
+      </label>
+      <div class="featured-fields" id="sponsor-fields" style="<?= $isSponsored ? '' : 'display:none' ?>">
+        <div class="field">
+          <label for="sponsor_name">Nome dello sponsor</label>
+          <input type="text" name="sponsor_name" id="sponsor_name" maxlength="160"
+                 placeholder="es. Azienda S.r.l." value="<?= e($post['sponsor_name'] ?? '') ?>">
+          <div class="hint">Mostrato al pubblico: «Contenuto sponsorizzato da …».</div>
+        </div>
+        <div class="field">
+          <label for="sponsor_url">Link dello sponsor (facoltativo)</label>
+          <input type="url" name="sponsor_url" id="sponsor_url" maxlength="500"
+                 placeholder="https://sito-sponsor.it" value="<?= e($post['sponsor_url'] ?? '') ?>">
+          <div class="hint">Il nome dello sponsor diventa un link (con <code>rel="sponsored"</code> per rispettare le regole di Google).</div>
+        </div>
+        <div class="field">
+          <label for="sponsor_price">Prezzo pagato (€) — solo per te</label>
+          <input type="text" name="sponsor_price" id="sponsor_price" inputmode="decimal"
+                 placeholder="es. 30" value="<?= e(isset($post['sponsor_price']) && $post['sponsor_price'] !== null ? rtrim(rtrim((string)$post['sponsor_price'], '0'), '.') : '') ?>">
+          <div class="hint">Registra quanto ha pagato lo sponsor. Non è pubblico.</div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="sponsored_until">Scadenza sponsorizzazione</label>
+          <input type="date" name="sponsored_until" id="sponsored_until" value="<?= e($spUntil) ?>">
+          <div class="hint">Per il tuo controllo: quando finisce il periodo pagato.</div>
+        </div>
+      </div>
+    </fieldset>
+    <script>
+      (function(){
+        var cb = document.getElementById('is_sponsored');
+        var box = document.getElementById('sponsor-fields');
+        if (cb && box) cb.addEventListener('change', function(){ box.style.display = cb.checked ? '' : 'none'; });
+      })();
+    </script>
     <div class="field">
       <label for="status">Stato</label>
       <select name="status" id="status">

@@ -37,6 +37,9 @@ $totalPages = (int) ceil($total / $perPage);
       <div class="post-card-body">
         <h2 style="margin:0 0 6px">
           <a href="<?= e(url('/blog/' . $p['slug'])) ?>"><?= e($p['title']) ?></a>
+          <?php if (!empty($p['is_sponsored'])): ?>
+            <span class="badge featured" style="vertical-align:middle">Sponsorizzato</span>
+          <?php endif; ?>
         </h2>
         <div class="muted" style="font-size:.82rem; margin-bottom:8px">
           <?= e(date('d/m/Y', strtotime((string)($p['published_at'] ?? $p['created_at'])))) ?>
@@ -73,4 +76,19 @@ $totalPages = (int) ceil($total / $perPage);
       <?php endif; ?>
     </div>
   <?php endif; ?>
+<?php endif; ?>
+
+<?php
+  $spInfo  = setting('sponsor_info', '');
+  $spPrice = trim((string) setting('sponsor_price', ''));
+?>
+<?php if ($spInfo !== '' || $spPrice !== ''): ?>
+  <div class="panel sponsor-cta">
+    <h3 style="margin:0 0 6px">📣 Vuoi un articolo sul nostro blog?</h3>
+    <?php if ($spInfo !== ''): ?><p style="margin:0 0 8px"><?= e($spInfo) ?></p><?php endif; ?>
+    <?php if ($spPrice !== ''): ?>
+      <p class="sponsor-price">Costo: <strong><?= e($spPrice) ?> € ad articolo</strong></p>
+    <?php endif; ?>
+    <a class="btn small" href="<?= e(url('/contatti')) ?>">Contattaci</a>
+  </div>
 <?php endif; ?>

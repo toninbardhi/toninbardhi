@@ -48,6 +48,14 @@ function redirect(string $path): void
     exit;
 }
 
+/** Formatta un importo in euro all'italiana (30 -> "30", 45.5 -> "45,50"). */
+function money(float $n): string
+{
+    return $n == (int) $n
+        ? number_format($n, 0, ',', '.')
+        : number_format($n, 2, ',', '.');
+}
+
 /** Genera uno slug URL-safe da una stringa. */
 function slugify(string $text): string
 {

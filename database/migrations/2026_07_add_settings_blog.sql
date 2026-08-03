@@ -43,3 +43,19 @@ ALTER TABLE `posts`
   ADD KEY `idx_posts_category` (`category_id`),
   ADD CONSTRAINT `fk_posts_category` FOREIGN KEY (`category_id`)
     REFERENCES `categories` (`id`) ON DELETE SET NULL;
+
+-- ------------------------------------------------------------
+--  Blog: articoli sponsorizzati (a pagamento, gestiti a mano).
+--  L'articolo lo scrive l'admin; lo sponsor paga offline.
+-- ------------------------------------------------------------
+ALTER TABLE `posts`
+  ADD COLUMN `is_sponsored`    TINYINT(1) NOT NULL DEFAULT 0 AFTER `category_id`,
+  ADD COLUMN `sponsor_name`    VARCHAR(160) NULL AFTER `is_sponsored`,
+  ADD COLUMN `sponsor_url`     VARCHAR(500) NULL AFTER `sponsor_name`,
+  ADD COLUMN `sponsor_price`   DECIMAL(8,2) NULL AFTER `sponsor_url`,
+  ADD COLUMN `sponsored_until` DATE NULL AFTER `sponsor_price`;
+
+-- Prezzo di listino pubblico per un articolo sponsorizzato ("tot ad articolo").
+INSERT IGNORE INTO `settings` (`key`,`value`) VALUES
+  ('sponsor_price', ''),
+  ('sponsor_info',  'Vuoi pubblicare un articolo sponsorizzato sul nostro blog? Scrivici.');
