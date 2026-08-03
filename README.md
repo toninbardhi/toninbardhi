@@ -215,6 +215,28 @@ dimensioni senza esaurire la memoria, ed è idempotente (le categorie già
 presenti non vengono duplicate). Se il tuo piano Netsons non ha accesso SSH,
 esegui l'import **in locale** e poi carica il database.
 
+## Risoluzione problemi (deploy)
+
+**Il sito mostra "403 Forbidden" o una pagina vuota / elenco file**
+Quasi sempre significa che Apache non trova il file d'ingresso. Controlla:
+
+1. **File nascosti caricati.** I file `.htaccess` iniziano con un punto e molti
+   client FTP / File Manager **non li mostrano**. Attiva "**Mostra file
+   nascosti**" e verifica che ci siano:
+   `.htaccess` (nella radice), `public/.htaccess`, `app/.htaccess`,
+   `database/.htaccess`.
+2. **`index.php` nella radice.** Deve esserci (inoltra a `public/index.php`).
+3. **`app/config.php` creato** (copia di `app/config.example.php` con le tue
+   credenziali del database).
+4. **`mod_rewrite` attivo** (su Netsons lo è di default).
+
+**Le pagine interne (es. /arte/cinema) danno 404 ma la home funziona**
+Manca il `.htaccess` nella radice o `mod_rewrite` non è attivo: ricarica il
+`.htaccess` (file nascosto) e, se serve, contatta l'assistenza Netsons.
+
+**Errore di connessione al database**
+Controlla i valori in `app/config.php` (nome db, utente, password, host).
+
 ## Struttura del progetto
 
 ```
