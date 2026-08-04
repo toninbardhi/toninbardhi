@@ -6,6 +6,7 @@ $status  = $item['status'] ?? 'draft';
 $cat     = $item['category_id'] ?? '';
 $aiOn    = $item === null ? true : !empty($item['ai_generated']);
 $paid    = !empty($item['is_paid']);
+$aiButton = !empty($CONFIG['describe']['ai_enabled']); // pulsante solo se l'AI è configurata
 ?>
 <h1><?= $editing ? 'Modifica scheda' : 'Nuova scheda Spotlight' ?></h1>
 
@@ -25,11 +26,19 @@ $paid    = !empty($item['is_paid']);
              value="<?= e($item['subject_url'] ?? '') ?>">
     </div>
 
-    <div class="ai-gen">
-      <button type="button" class="btn" id="ai-generate">✨ Genera bozza con l'AI</button>
-      <span class="muted" id="ai-status"></span>
-      <div class="hint">Legge il sito e compila le tre sezioni. Puoi poi modificarle a mano prima di pubblicare.</div>
-    </div>
+    <?php if ($aiButton): ?>
+      <div class="ai-gen">
+        <button type="button" class="btn" id="ai-generate">✨ Genera bozza con l'AI</button>
+        <span class="muted" id="ai-status"></span>
+        <div class="hint">Legge il sito e compila le tre sezioni. Puoi poi modificarle a mano prima di pubblicare.</div>
+      </div>
+    <?php else: ?>
+      <div class="ai-gen">
+        <div class="hint" style="margin:0">✍️ Scrivi le tre sezioni qui sotto. Puoi prepararle con l'AI che
+          preferisci (ChatGPT, Claude…) e <strong>incollarle</strong> nei campi. Ricorda di tenere attivo
+          l'avviso «assistito da AI» qui sotto.</div>
+      </div>
+    <?php endif; ?>
 
     <div class="field">
       <label for="title">Titolo della scheda *</label>
